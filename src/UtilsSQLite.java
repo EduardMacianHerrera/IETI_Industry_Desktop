@@ -16,9 +16,7 @@ public class UtilsSQLite {
             conn = DriverManager.getConnection(url);
             if (conn != null) {
                 DatabaseMetaData meta = conn.getMetaData();
-                System.out.println("BBDD driver: " + meta.getDriverName());
             }
-            System.out.println("BBDD SQLite connectada");
         } catch (SQLException e) { e.printStackTrace(); }
 
         return conn;
