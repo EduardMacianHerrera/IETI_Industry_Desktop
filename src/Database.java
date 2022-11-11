@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Database {
-    public static void main(String[] args) throws SQLException {
-        String basePath = System.getProperty("user.dir") + "/";
-        String filePath = basePath + "database.db";
 
+    private static String basePath = System.getProperty("user.dir") + "/";
+    private static String filePath = basePath + "database.db";
+
+    public static void main(String[] args) throws SQLException {
 
         // Si no hi ha l'arxiu creat, el crea i li posa dades
         File fDatabase = new File(filePath);
@@ -20,12 +21,18 @@ public class Database {
 
     }
 
-    static HashMap<String, String> getData(Connection conn) throws SQLException {
-        HashMap data = new HashMap<String, String>();
+    static HashMap<String, String> getData() {
+        Connection conn = UtilsSQLite.connect(filePath);
+        HashMap<String, String> data = new HashMap<String, String>();
         ResultSet rs = UtilsSQLite.querySelect(conn, "SELECT username, password FROM users");
 
-        while (rs.next()) {
-            data.put(rs.getString("username"), rs.getString("password"));
+        try {
+            while (rs.next()) {
+                data.put(rs.getString("username"), rs.getString("password"));
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
 
         return data;
@@ -44,6 +51,9 @@ public class Database {
                 + "	id integer PRIMARY KEY AUTOINCREMENT,"
                 + "	username text NOT NULL,"
                 + " password text NOT NULL);");
+
+        // Afegir elements a una taula
+        UtilsSQLite.queryUpdate(conn, "INSERT INTO users (username,password) VALUES (\"test\",\"test\");");
 
         // Desconnectar
         UtilsSQLite.disconnect(conn);

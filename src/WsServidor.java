@@ -1,12 +1,21 @@
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+
+
 
 // Compilar amb:
 // javac -cp "lib/*:." WsServidor.java
@@ -16,10 +25,12 @@ import org.java_websocket.server.WebSocketServer;
 
 public class WsServidor extends WebSocketServer {
 
+    private HashMap<String, String> users = Database.getData();
+
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        int port = 8888; 
+        int port = 8888;
         boolean running = true;
 
         // Deshabilitar SSLv3 per clients Android
@@ -35,7 +46,7 @@ public class WsServidor extends WebSocketServer {
             if (line.equals("exit")) {
                 running = false;
             }
-        }    
+        }
 
         System.out.println("Aturant WsServidor");
         socket.stop(1000);
@@ -53,9 +64,9 @@ public class WsServidor extends WebSocketServer {
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
 
         // Saludem personalment al nou client
-        conn.send("Benvingut a WsServer"); 
+        conn.send("Benvingut a WsServer");
 
-        // Enviem la direcció URI del nou client a tothom 
+        // Enviem la direcció URI del nou client a tothom
         broadcast("Nova connexió: " + handshake.getResourceDescriptor());
 
         // Mostrem per pantalla (servidor) la nova connexió
@@ -76,19 +87,15 @@ public class WsServidor extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, String message) {
 
-        if (message.equalsIgnoreCase("list")) {
+        if (message.equalsIgnoreCase("getUsers")) {
             // Enviar la llsita de connexions al client
-            System.out.println("Llista de connexions:");
-            String strList = "";
-            for (WebSocket ws : this.getConnections()) {
-                strList += " " + getConnectionId(ws);
-                
-            }
-            conn.send(strList);
+            HashMap<String, String> users = Database.getData();
+            conn.send(objToBytes(users));
+
 
         } else if (message.contains("to(")) {
             // Missatge privat
-        
+
             // Trobar el client amb aquest identificador
             String strDesti = message.substring(message.indexOf("(") + 1, message.indexOf(")"));
             WebSocket desti = null;
@@ -96,10 +103,11 @@ public class WsServidor extends WebSocketServer {
                 if (strDesti.compareTo(getConnectionId(ws)) == 0) {
                     desti = ws;
                     break;
-                }                
+                }
             }
 
-            // Enviar el missatge si s'ha trobat el client o retornar un error en cas contrari
+            // Enviar el missatge si s'ha trobat el client o retornar un error en cas
+            // contrari
             if (desti != null) {
                 String idOrigen = getConnectionId(conn);
                 String idDesti = getConnectionId(desti);
@@ -122,9 +130,6 @@ public class WsServidor extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, ByteBuffer message) {
 
-        // Enviem el missatge del client a tothom
-        broadcast(message.array());
-
         // Mostrem per pantalla (servidor) el missatge
         System.out.println(conn + ": " + message);
     }
@@ -142,8 +147,40 @@ public class WsServidor extends WebSocketServer {
         setConnectionLostTimeout(100);
     }
 
-    public String getConnectionId (WebSocket connection) {
+    public String getConnectionId(WebSocket connection) {
         String name = connection.toString();
         return name.replaceAll("org.java_websocket.WebSocketImpl@", "").substring(0, 3);
     }
+
+    public static byte[] objToBytes (Object obj) {
+        byte[] result = null;
+        try {
+            // Transforma l'objecte a bytes[]
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(obj);
+            oos.flush();
+            result = bos.toByteArray();
+        } catch (IOException e) { e.printStackTrace(); }
+        return result;
+    }
+  
+    public static Object bytesToObject (ByteBuffer arr) {
+        Object result = null;
+        try {
+            // Transforma el ByteButter en byte[]
+            byte[] bytesArray = new byte[arr.remaining()];
+            arr.get(bytesArray, 0, bytesArray.length);
+  
+            // Transforma l'array de bytes en objecte
+            ByteArrayInputStream in = new ByteArrayInputStream(bytesArray);
+            ObjectInputStream is = new ObjectInputStream(in);
+            return is.readObject();
+  
+        } catch (ClassNotFoundException e) { e.printStackTrace();
+        } catch (UnsupportedEncodingException e) { e.printStackTrace();
+        } catch (IOException e) { e.printStackTrace(); }
+        return result;
+    }
+  
 }
