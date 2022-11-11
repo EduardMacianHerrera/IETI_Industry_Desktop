@@ -126,24 +126,26 @@ public class LectorXML {
 		return controlTemp;
 	}
 	
-	public static void crearDropDown(Node control, Modelo modelo) { // HACER QUE COJA EL VALOR POR DEFECTO
+	public static void crearDropDown(Node control, Modelo modelo) {
 		NodeList listaOpciones = control.getChildNodes();
 		Element elmDropdown = (Element) control;
 		JComboBox comboBox = new JComboBox();
-		String[] labelsComboBox = new String[listaOpciones.getLength()];
-		String[] valoresComboBox = new String[listaOpciones.getLength()];
+		ArrayList<String> labelsComboBox = new ArrayList<String>();
+		ArrayList<String> valoresComboBox = new ArrayList<String>();
 		
 		for (int k = 0; k < listaOpciones.getLength(); k++) {
 			Node opcion = listaOpciones.item(k);
 			if (opcion.getNodeType() == Node.ELEMENT_NODE) {
 				Element elmOpcion = (Element) opcion;
-				labelsComboBox[k] = opcion.getTextContent();
-				valoresComboBox[k] = elmOpcion.getAttribute("value");
+				labelsComboBox.add(opcion.getTextContent());
+				valoresComboBox.add(elmOpcion.getAttribute("value"));
 			}
 		}
-		DefaultComboBoxModel modeloComboBox = new DefaultComboBoxModel(labelsComboBox);
-		comboBox.setModel(modeloComboBox);
 		
+		DefaultComboBoxModel modeloComboBox = new DefaultComboBoxModel(labelsComboBox.toArray());
+		comboBox.setModel(modeloComboBox);
+		comboBox.setSelectedItem(labelsComboBox.get(valoresComboBox.indexOf(elmDropdown.getAttribute("default")))); // Coge el atributo default, lo busca en la lista de valores,
+																													//  saca el indice y selecciona la label por defecto
 		Control controlTemp = new Control();
 		controlTemp.setId(elmDropdown.getAttribute("id"));
 		controlTemp.setControl(comboBox);

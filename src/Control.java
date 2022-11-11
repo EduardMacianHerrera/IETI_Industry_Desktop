@@ -1,12 +1,21 @@
+import java.util.ArrayList;
 
 public class Control {
 
+	// Atributos generales
+	private Object control;
 	private String id;
 	private String label;
 	private String tipoControl;
-	private String[] labelsComboBox;
-	private String[] valoresComboBox;
-	private Object control;
+	
+	// Atributos para los dropdowns
+	private ArrayList<String> labelsComboBox;
+	private ArrayList<String> valoresComboBox;
+	
+	// Atributos para los sensores
+	private String units;
+	private String thresholdLow;
+	private String thresholdHigh;
 
 	public Control() {
 		super();
@@ -52,22 +61,45 @@ public class Control {
 		this.tipoControl = tipoControl;
 	}
 
-	public String[] getLabelsComboBox() {
+	public ArrayList<String> getLabelsComboBox() {
 		return labelsComboBox;
 	}
 
-	public void setLabelsComboBox(String[] labelsComboBox) {
+	public void setLabelsComboBox(ArrayList<String> labelsComboBox) {
 		this.labelsComboBox = labelsComboBox;
 	}
 
-	public String[] getValoresComboBox() {
+	public ArrayList<String> getValoresComboBox() {
 		return valoresComboBox;
 	}
 
-	public void setValoresComboBox(String[] valoresComboBox) {
+	public void setValoresComboBox(ArrayList<String> valoresComboBox) {
 		this.valoresComboBox = valoresComboBox;
 	}
+
+	public String getUnits() {
+		return units;
+	}
+
+	public void setUnits(String units) {
+		this.units = units;
+	}
+
+	public String getThresholdLow() {
+		return thresholdLow;
+	}
+
+	public void setThresholdLow(String thresholdLow) {
+		this.thresholdLow = thresholdLow;
+	}
+
+	public String getThresholdHigh() {
+		return thresholdHigh;
+	}
+
+	public void setThresholdHigh(String thresholdHigh) {
+		this.thresholdHigh = thresholdHigh;
+	}
 	
-	
-	
+
 }
