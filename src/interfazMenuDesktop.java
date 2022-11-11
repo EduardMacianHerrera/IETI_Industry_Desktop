@@ -31,6 +31,11 @@ public class interfazMenuDesktop extends JFrame {
 	private static String nomArxiu;
 	private static String directoriTreball=System.getProperty("user.dir");
 	private JPanel contentPane;
+	private JPanel panelSliders;
+	private JPanel panelControles;
+	private JPanel panelSpinners;
+	private JPanel panelJTextField;
+	private JPanel panelJComboBox;
 	
 	/**
 	 * Launch the application.
@@ -39,7 +44,8 @@ public class interfazMenuDesktop extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					interfazMenuDesktop frame = new interfazMenuDesktop();
+					Modelo modelo=new Modelo();
+					interfazMenuDesktop frame = new interfazMenuDesktop(modelo);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -51,7 +57,8 @@ public class interfazMenuDesktop extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public interfazMenuDesktop() {
+	public interfazMenuDesktop(Modelo modelo) {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -76,6 +83,8 @@ public class interfazMenuDesktop extends JFrame {
 				arxiuDades=navegacioFitxers.getSelectedFile() ;
 				if (arxiuDades != null) {
 					System.out.println("S'ha obert un arxiu amb la ruta "+arxiuDades.getAbsolutePath().toString());
+					LectorXML.cargarConfig(arxiuDades, modelo);
+					colocarElements(modelo, panelJComboBox, panelJTextField, panelSliders, panelSpinners);
 				}
 			}
 		});
@@ -85,7 +94,7 @@ public class interfazMenuDesktop extends JFrame {
 		JMenuItem opcioVisualitzacions = new JMenuItem("Visualitzacions");
 		menuOpciones.add(opcioVisualitzacions);
 		
-		JPanel panelControles = new JPanel();
+		panelControles = new JPanel();
 		contentPane.add(panelControles, BorderLayout.CENTER);
 		GridBagLayout gbl_panelControles = new GridBagLayout();
 		gbl_panelControles.columnWidths = new int[] {2};
@@ -94,7 +103,11 @@ public class interfazMenuDesktop extends JFrame {
 		gbl_panelControles.rowWeights = new double[]{1.0, 1.0};
 		panelControles.setLayout(gbl_panelControles);
 		
-		JPanel panelSliders = new JPanel();
+		/*********
+		 * ********
+		 */
+		
+		panelSliders = new JPanel();
 		GridBagConstraints gbc_panelSliders = new GridBagConstraints();
 		gbc_panelSliders.fill = GridBagConstraints.BOTH;
 		gbc_panelSliders.insets = new Insets(0, 0, 5, 0);
@@ -102,7 +115,7 @@ public class interfazMenuDesktop extends JFrame {
 		gbc_panelSliders.gridy = 0;
 		panelControles.add(panelSliders, gbc_panelSliders);
 		
-		JPanel panelSpinners = new JPanel();
+		panelSpinners = new JPanel();
 		GridBagConstraints gbc_panelSpinners = new GridBagConstraints();
 		gbc_panelSpinners.insets = new Insets(0, 0, 5, 0);
 		gbc_panelSpinners.fill = GridBagConstraints.BOTH;
@@ -110,20 +123,20 @@ public class interfazMenuDesktop extends JFrame {
 		gbc_panelSpinners.gridy = 1;
 		panelControles.add(panelSpinners, gbc_panelSpinners);
 		
-		JPanel panel3 = new JPanel();
-		GridBagConstraints gbc_panel3 = new GridBagConstraints();
-		gbc_panel3.insets = new Insets(0, 0, 5, 0);
-		gbc_panel3.fill = GridBagConstraints.BOTH;
-		gbc_panel3.gridx = 1;
-		gbc_panel3.gridy = 0;
-		panelControles.add(panel3, gbc_panel3);
+		panelJComboBox = new JPanel();
+		GridBagConstraints gbc_panelJComboBox = new GridBagConstraints();
+		gbc_panelJComboBox.insets = new Insets(0, 0, 5, 0);
+		gbc_panelJComboBox.fill = GridBagConstraints.BOTH;
+		gbc_panelJComboBox.gridx = 1;
+		gbc_panelJComboBox.gridy = 0;
+		panelControles.add(panelJComboBox, gbc_panelJComboBox);
 		
-		JPanel panel4 = new JPanel();
-		GridBagConstraints gbc_panel4 = new GridBagConstraints();
-		gbc_panel4.fill = GridBagConstraints.BOTH;
-		gbc_panel4.gridx = 1;
-		gbc_panel4.gridy = 1;
-		panelControles.add(panel4, gbc_panel4);
+		panelJTextField = new JPanel();
+		GridBagConstraints gbc_panelJTextField = new GridBagConstraints();
+		gbc_panelJTextField.fill = GridBagConstraints.BOTH;
+		gbc_panelJTextField.gridx = 1;
+		gbc_panelJTextField.gridy = 1;
+		panelControles.add(panelJTextField, gbc_panelJTextField);
 		
 		/*
 		 * Codigo de prueba para hacer una funcion que coloque algunos elementos de ejemplo
@@ -137,16 +150,46 @@ public class interfazMenuDesktop extends JFrame {
 		
 		ArrayList<JSpinner> llistaSpinners=new ArrayList<>(Arrays.asList(spinner1, spinner2, spinner3));
 		ArrayList<JSlider> llistaSliders=new ArrayList<>(Arrays.asList(slider1, slider2));
-		colocarElements(llistaSpinners, llistaSliders, panelSpinners, panel3);
+//		colocarElementsProva(llistaSpinners, llistaSliders, panelSpinners, panelJComboBox);
+
+		
+
 	}
 	
-	public void colocarElements(ArrayList<JSpinner> llistaSpinners, ArrayList<JSlider> llistaSliders, JPanel laminaSpinners, JPanel altrePanell) {
+	public void colocarElements(Modelo modelo, JPanel panelJComboBox, JPanel panelJTextField, JPanel panelSliders, JPanel panelSpinners) {
+		ArrayList<Control> listaElementos = modelo.getControles();
+		for(int i=0;i<listaElementos.size();i++) {
+			Control elemento=listaElementos.get(i);
+			String tipoControl = elemento.getTipoControl();
+			switch (tipoControl) {
+			case "spinner":
+				
+				break;
+			case "slider":
+				JSlider slider =(JSlider) elemento.getControl();
+				panelSliders.add(slider);
+				break;
+			case "sensor":
+							
+				break;
+			case "dropdown":
+				
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
+	
+	public void colocarElementsProva(ArrayList<JSpinner> llistaSpinners, ArrayList<JSlider> llistaSliders, JPanel laminaSpinners, JPanel altrePanell) {
 		for(int i=0;i<llistaSpinners.size();i++) {
 			JPanel laminaInsertar=new JPanel();
 			JSpinner elementSpinner=llistaSpinners.get(i);
 			JLabel etiqueta=new JLabel("Etiqueta");
 			laminaInsertar.add(etiqueta);
 			laminaInsertar.add(elementSpinner);
+			laminaSpinners.add(laminaInsertar);
 		}
 		
 		for(int i=0;i<llistaSliders.size();i++) {
