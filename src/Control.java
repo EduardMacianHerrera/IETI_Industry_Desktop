@@ -4,6 +4,8 @@ public class Control {
 	private String id;
 	private String label;
 	private String tipoControl;
+	private String[] labelsComboBox;
+	private String[] valoresComboBox;
 	private Object control;
 
 	public Control() {
@@ -49,5 +51,23 @@ public class Control {
 	public void setTipoControl(String tipoControl) {
 		this.tipoControl = tipoControl;
 	}
+
+	public String[] getLabelsComboBox() {
+		return labelsComboBox;
+	}
+
+	public void setLabelsComboBox(String[] labelsComboBox) {
+		this.labelsComboBox = labelsComboBox;
+	}
+
+	public String[] getValoresComboBox() {
+		return valoresComboBox;
+	}
+
+	public void setValoresComboBox(String[] valoresComboBox) {
+		this.valoresComboBox = valoresComboBox;
+	}
+	
+	
 	
 }

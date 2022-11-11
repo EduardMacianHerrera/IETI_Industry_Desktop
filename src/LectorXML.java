@@ -2,7 +2,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,8 +21,8 @@ public class LectorXML {
 	
 	public static void main(String[] args) {
 		Modelo modelo = new Modelo();
-		String config = "conf/config.xml";
-		cargarConfig(config, modelo);
+		File file = new File("conf/config.xml");
+		cargarConfig(file, modelo);
 		
 		ArrayList<Control> controles = modelo.getControles();
 		
@@ -31,8 +34,7 @@ public class LectorXML {
 		
 	}
 
-	public static void cargarConfig(String config, Modelo modelo) {
-		File file = new File(config);
+	public static void cargarConfig(File file, Modelo modelo) {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder;
 		try {
@@ -49,13 +51,7 @@ public class LectorXML {
 					Node control = listaControles.item(j);
 					if (control.getNodeType() == Node.ELEMENT_NODE) {
 						if (control.getNodeName().equals("dropdown")) {
-							NodeList listaOpciones = control.getChildNodes();
-							for (int k = 0; k < listaOpciones.getLength(); k++) {
-								Node opcion = listaOpciones.item(k);
-								if (opcion.getNodeType() == Node.ELEMENT_NODE) {
-									String labelOpcion = opcion.getTextContent();
-								}
-							}
+							crearDropDown(control, modelo);
 						} else {
 							addControlToModel(control, modelo);
 						}
@@ -81,8 +77,17 @@ public class LectorXML {
 		String labelControl = control.getTextContent();
 		Element elmControl = (Element) control;
 		String id = elmControl.getAttribute("id");
-		Control controlTemp = new Control();
+		Control controlTemp = crearControl(id, labelControl, tipoControl, elmControl);
 		
+		modelo.getControles().add(controlTemp);
+		
+	}
+	
+	public static Control crearControl(String id, String labelControl, String tipoControl, Element elmControl) {
+		Control controlTemp = new Control();
+		controlTemp.setId(id);
+		controlTemp.setLabel(labelControl);
+		controlTemp.setTipoControl(tipoControl);
 		switch (tipoControl) {
 		case "switch":
 			JToggleButton interruptor = new JToggleButton();
@@ -91,10 +96,9 @@ public class LectorXML {
 			} else {
 				interruptor.setSelected(false);
 			}
-			controlTemp.setId(id);
-			controlTemp.setLabel(labelControl);
-			controlTemp.setTipoControl(tipoControl);
+			
 			controlTemp.setControl(interruptor);
+			//modelo.getControles().add(controlTemp);
 			break;
 
 		case "slider":
@@ -103,14 +107,51 @@ public class LectorXML {
 			slider.setMaximum(Integer.valueOf(elmControl.getAttribute("max"))* 10);
 			slider.setValue((int)(Double.valueOf(elmControl.getAttribute("default"))* 10));
 			// Mirar lo de los tick y multiplicar por 10
+			
+			controlTemp.setControl(slider);
+			
+			break;
+			
+			
+		case "sensor":
+			JTextField textField = new JTextField();
+			
+			controlTemp.setControl(textField);
 			break;
 			
 		default:
 			break;
 		}
 		
-		modelo.getControles().add(controlTemp);
+		return controlTemp;
+	}
+	
+	public static void crearDropDown(Node control, Modelo modelo) { // HACER QUE COJA EL VALOR POR DEFECTO
+		NodeList listaOpciones = control.getChildNodes();
+		Element elmDropdown = (Element) control;
+		JComboBox comboBox = new JComboBox();
+		String[] labelsComboBox = new String[listaOpciones.getLength()];
+		String[] valoresComboBox = new String[listaOpciones.getLength()];
 		
+		for (int k = 0; k < listaOpciones.getLength(); k++) {
+			Node opcion = listaOpciones.item(k);
+			if (opcion.getNodeType() == Node.ELEMENT_NODE) {
+				Element elmOpcion = (Element) opcion;
+				labelsComboBox[k] = opcion.getTextContent();
+				valoresComboBox[k] = elmOpcion.getAttribute("value");
+			}
+		}
+		DefaultComboBoxModel modeloComboBox = new DefaultComboBoxModel(labelsComboBox);
+		comboBox.setModel(modeloComboBox);
+		
+		Control controlTemp = new Control();
+		controlTemp.setId(elmDropdown.getAttribute("id"));
+		controlTemp.setControl(comboBox);
+		controlTemp.setLabelsComboBox(labelsComboBox);
+		controlTemp.setValoresComboBox(valoresComboBox);
+		controlTemp.setTipoControl("dropdown");
+		
+		modelo.getControles().add(controlTemp);
 	}
 	
 }
