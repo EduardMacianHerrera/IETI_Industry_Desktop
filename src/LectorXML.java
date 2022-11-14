@@ -16,6 +16,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class LectorXML {
 	
@@ -69,7 +70,7 @@ public class LectorXML {
 			e.printStackTrace();
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("El formato del XML no es correcto");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -129,7 +130,9 @@ public class LectorXML {
 			
 		case "sensor":
 			JTextField textField = new JTextField();
+			textField.setColumns(5); // MIRAR DE HACER AUTOMATICO
 			
+			controlTemp.setUnits(elmControl.getAttribute("units"));
 			controlTemp.setThresholdLow(Integer.valueOf(elmControl.getAttribute("thresholdlow")));
 			controlTemp.setThresholdHigh(Integer.valueOf(elmControl.getAttribute("thresholdhigh")));
 			controlTemp.setControl(textField);
