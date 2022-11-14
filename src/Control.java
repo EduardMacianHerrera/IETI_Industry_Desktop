@@ -14,8 +14,8 @@ public class Control {
 	
 	// Atributos para los sensores
 	private String units;
-	private String thresholdLow;
-	private String thresholdHigh;
+	private int thresholdLow;
+	private int thresholdHigh;
 
 	public Control() {
 		super();
@@ -85,21 +85,23 @@ public class Control {
 		this.units = units;
 	}
 
-	public String getThresholdLow() {
+	public int getThresholdLow() {
 		return thresholdLow;
 	}
 
-	public void setThresholdLow(String thresholdLow) {
+	public void setThresholdLow(int thresholdLow) {
 		this.thresholdLow = thresholdLow;
 	}
 
-	public String getThresholdHigh() {
+	public int getThresholdHigh() {
 		return thresholdHigh;
 	}
 
-	public void setThresholdHigh(String thresholdHigh) {
+	public void setThresholdHigh(int thresholdHigh) {
 		this.thresholdHigh = thresholdHigh;
 	}
+
+	
 	
 
 }

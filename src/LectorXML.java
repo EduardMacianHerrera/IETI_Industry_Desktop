@@ -49,13 +49,18 @@ public class LectorXML {
 				NodeList listaControles = nodeBloque.getChildNodes();
 				for (int j = 0; j < listaControles.getLength(); j++) {
 					Node control = listaControles.item(j);
-					if (control.getNodeType() == Node.ELEMENT_NODE) {
-						if (control.getNodeName().equals("dropdown")) {
-							crearDropDown(control, modelo);
-						} else {
-							addControlToModel(control, modelo);
+					try {
+						if (control.getNodeType() == Node.ELEMENT_NODE) {
+							if (control.getNodeName().equals("dropdown")) {
+								crearDropDown(control, modelo);
+							} else {
+								addControlToModel(control, modelo);
+							}
 						}
+					} catch (Exception e) {
+						System.out.println("El elemento "+ control.getNodeName()+" no tiene el formato correcto");
 					}
+					
 				}
 			}
 	        
@@ -77,13 +82,22 @@ public class LectorXML {
 		String labelControl = control.getTextContent();
 		Element elmControl = (Element) control;
 		String id = elmControl.getAttribute("id");
-		Control controlTemp = crearControl(id, labelControl, tipoControl, elmControl);
+		Control controlTemp;
+		try {
+			controlTemp = crearControl(id, labelControl, tipoControl, elmControl);
+			modelo.getControles().add(controlTemp);
+		} catch (Exception e) {
+			System.out.println("Error de formato en un control "+control.getNodeName());
+		}
 		
-		modelo.getControles().add(controlTemp);
+		
 		
 	}
 	
-	public static Control crearControl(String id, String labelControl, String tipoControl, Element elmControl) {
+	public static Control crearControl(String id, String labelControl, String tipoControl, Element elmControl) throws Exception {
+		if (id.equals("") || labelControl.equals("") || tipoControl.equals("") || elmControl.equals("")) {
+			throw new Exception();
+		}
 		Control controlTemp = new Control();
 		controlTemp.setId(id);
 		controlTemp.setLabel(labelControl);
@@ -116,6 +130,8 @@ public class LectorXML {
 		case "sensor":
 			JTextField textField = new JTextField();
 			
+			controlTemp.setThresholdLow(Integer.valueOf(elmControl.getAttribute("thresholdlow")));
+			controlTemp.setThresholdHigh(Integer.valueOf(elmControl.getAttribute("thresholdhigh")));
 			controlTemp.setControl(textField);
 			break;
 			
