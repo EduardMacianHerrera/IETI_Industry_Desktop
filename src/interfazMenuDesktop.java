@@ -44,26 +44,14 @@ public class interfazMenuDesktop extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Modelo modelo=new Modelo();
-					interfazMenuDesktop frame = new interfazMenuDesktop(modelo);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
 
 	/**
 	 * Create the frame.
 	 */
 	public interfazMenuDesktop(Modelo modelo) {
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		setBounds(100, 100, 600, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -153,6 +141,8 @@ public class interfazMenuDesktop extends JFrame {
 		ArrayList<JSpinner> llistaSpinners=new ArrayList<>(Arrays.asList(spinner1, spinner2, spinner3));
 		ArrayList<JSlider> llistaSliders=new ArrayList<>(Arrays.asList(slider1, slider2));
 
+		
+
 
 	}
 	
@@ -200,4 +190,6 @@ public class interfazMenuDesktop extends JFrame {
 			
 		}
 	}
+
+	
 }
