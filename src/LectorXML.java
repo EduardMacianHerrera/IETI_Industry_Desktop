@@ -22,8 +22,13 @@ public class LectorXML {
 	
 	public static void main(String[] args) {
 		Modelo modelo = new Modelo();
-		File file = new File("conf/config.xml");
-		cargarConfig(file, modelo);
+		File file = new File("conf/config_mod.xml");
+		try {
+			cargarConfig(file, modelo);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}
 		
 		ArrayList<Control> controles = modelo.getControles();
 		
@@ -35,7 +40,7 @@ public class LectorXML {
 		
 	}
 
-	public static void cargarConfig(File file, Modelo modelo) {
+	public static void cargarConfig(File file, Modelo modelo) throws Exception {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder;
 		try {
@@ -59,7 +64,7 @@ public class LectorXML {
 							}
 						}
 					} catch (Exception e) {
-						System.out.println("El elemento "+ control.getNodeName()+" no tiene el formato correcto");
+						throw new Exception(e.getMessage());
 					}
 					
 				}
@@ -70,7 +75,7 @@ public class LectorXML {
 			e.printStackTrace();
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
-			System.out.println("El formato del XML no es correcto");
+			throw new Exception("El archivo xml no tiene el formato correcto");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -78,7 +83,7 @@ public class LectorXML {
         
 	}
 	
-	public static void addControlToModel(Node control, Modelo modelo) {
+	public static void addControlToModel(Node control, Modelo modelo) throws Exception {
 		String tipoControl = control.getNodeName();
 		String labelControl = control.getTextContent();
 		Element elmControl = (Element) control;
@@ -88,7 +93,7 @@ public class LectorXML {
 			controlTemp = crearControl(id, labelControl, tipoControl, elmControl);
 			modelo.getControles().add(controlTemp);
 		} catch (Exception e) {
-			System.out.println("Error de formato en un control "+control.getNodeName());
+			throw new Exception("Error de formato en un control "+control.getNodeName());
 		}
 		
 		
