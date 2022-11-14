@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
@@ -72,11 +73,24 @@ public class interfazMenuDesktop extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				navegacioFitxers=new JFileChooser(directoriTreball);
 				navegacioFitxers.showOpenDialog(new JFrame());
-				arxiuDades=navegacioFitxers.getSelectedFile() ;
+				arxiuDades=navegacioFitxers.getSelectedFile();
 				if (arxiuDades != null) {
 					System.out.println("S'ha obert un arxiu amb la ruta "+arxiuDades.getAbsolutePath().toString());
-					LectorXML.cargarConfig(arxiuDades, modelo);
-					colocarElements(modelo, panelJComboBox, panelJTextField, panelSliders, panelToggleButtons);
+					
+					
+					try {
+						
+						LectorXML.cargarConfig(arxiuDades, modelo);
+						
+						
+
+					} catch (Exception e1) {
+						mostrarMissatgeError(contentPane,e1.getMessage());
+						modelo.getControles().clear();
+						//inicializarPaneles();
+					}
+					inicializarPaneles();
+					colocarElements(modelo);
 					contentPane.revalidate();
 					contentPane.repaint();
 				}
@@ -88,6 +102,10 @@ public class interfazMenuDesktop extends JFrame {
 		JMenuItem opcioVisualitzacions = new JMenuItem("Visualitzacions");
 		menuOpciones.add(opcioVisualitzacions);
 		
+		
+	}
+	
+	public void inicializarPaneles() {
 		panelControles = new JPanel();
 		contentPane.add(panelControles, BorderLayout.CENTER);
 		GridBagLayout gbl_panelControles = new GridBagLayout();
@@ -131,22 +149,15 @@ public class interfazMenuDesktop extends JFrame {
 		gbc_panelJTextField.gridx = 1;
 		gbc_panelJTextField.gridy = 1;
 		panelControles.add(panelJTextField, gbc_panelJTextField);
-		
-		JSpinner spinner1=new JSpinner();
-		JSpinner spinner2=new JSpinner();
-		JSpinner spinner3=new JSpinner();
-		JSlider slider1=new JSlider();
-		JSlider slider2=new JSlider();
-		
-		ArrayList<JSpinner> llistaSpinners=new ArrayList<>(Arrays.asList(spinner1, spinner2, spinner3));
-		ArrayList<JSlider> llistaSliders=new ArrayList<>(Arrays.asList(slider1, slider2));
-
-		
-
 
 	}
 	
-	public void colocarElements(Modelo modelo, JPanel panelJComboBox, JPanel panelJTextField, JPanel panelSliders, JPanel panelToggleButtons) {
+	public void mostrarMissatgeError(JPanel lamina, String mensajeError) {
+		JOptionPane.showMessageDialog(lamina, mensajeError, "lectura XML incorrecta", 0);
+	}
+	
+	public void colocarElements(Modelo modelo) {
+		
 		ArrayList<Control> listaElementos = modelo.getControles();
 		for(int i=0;i<listaElementos.size();i++) {
 			JPanel panelInsertar=new JPanel();
@@ -190,6 +201,5 @@ public class interfazMenuDesktop extends JFrame {
 			
 		}
 	}
-
-	
+		
 }

@@ -41,6 +41,7 @@ public class LectorXML {
 	}
 
 	public static void cargarConfig(File file, Modelo modelo) throws Exception {
+		modelo.getControles().clear();
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder;
 		try {
@@ -58,7 +59,11 @@ public class LectorXML {
 					try {
 						if (control.getNodeType() == Node.ELEMENT_NODE) {
 							if (control.getNodeName().equals("dropdown")) {
-								crearDropDown(control, modelo);
+								try {
+									crearDropDown(control, modelo);
+								} catch (Exception e) {
+									throw new Exception("Error de formato en un control "+control.getNodeName());
+								}
 							} else {
 								addControlToModel(control, modelo);
 							}
