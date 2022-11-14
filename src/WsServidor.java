@@ -25,7 +25,6 @@ import org.java_websocket.server.WebSocketServer;
 
 public class WsServidor extends WebSocketServer {
 
-    private HashMap<String, String> users = Database.getData();
 
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
@@ -90,7 +89,9 @@ public class WsServidor extends WebSocketServer {
         if (message.equalsIgnoreCase("getUsers")) {
             // Enviar la llsita de connexions al client
             HashMap<String, String> users = Database.getData();
+            System.out.println(users.size());
             conn.send(objToBytes(users));
+            System.out.println("Enviant usuaris");
 
 
         } else if (message.contains("to(")) {
