@@ -113,10 +113,10 @@ public class LectorXML {
 
 	public static void loadSlider(Element elmSlider, Block block) throws SyntaxException {
 		int id;
-		double state;
-		double min;
-		double max;
-		double step;
+		int state;
+		int min;
+		int max;
+		int step;
 		String label = elmSlider.getTextContent();
 
 		if (label.equals("")) {
@@ -125,10 +125,10 @@ public class LectorXML {
 
 		try {
 			id = Integer.parseInt(elmSlider.getAttribute("id"));
-			state = Double.parseDouble(elmSlider.getAttribute("default"));
-			min = Double.parseDouble(elmSlider.getAttribute("min"));
-			max = Double.parseDouble(elmSlider.getAttribute("max"));
-			step = Double.parseDouble(elmSlider.getAttribute("step"));
+			state = Integer.parseInt(elmSlider.getAttribute("default"));
+			min = Integer.parseInt(elmSlider.getAttribute("min"));
+			max = Integer.parseInt(elmSlider.getAttribute("max"));
+			step = Integer.parseInt(elmSlider.getAttribute("step"));
 		} catch (Exception e) {
 			throw new SyntaxException("Slider");
 		}

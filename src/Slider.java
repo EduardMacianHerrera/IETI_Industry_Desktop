@@ -1,12 +1,12 @@
 public class Slider {
     int id;
-    double state;
-    double min;
-    double max;
-    double step;
+    int state;
+    int min;
+    int max;
+    int step;
     String label;
 
-    public Slider(int id, String label, double state, double min, double max, double step) {
+    public Slider(int id, String label, int state, int min, int max, int step) {
         this.id = id;
         this.label = label;
         this.state = state;
@@ -20,7 +20,7 @@ public class Slider {
         return "Slider:[label="+ label + ",id=" + id + ",state=" + state + ",min=" + min + ",step=" + step + "];";
     }
 
-    public double getId() {
+    public int getId() {
         return id;
     }
 
@@ -28,27 +28,27 @@ public class Slider {
         this.id = id;
     }
 
-    public double getState() {
+    public int getState() {
         return state;
     }
 
-    public void setState(double state) {
+    public void setState(int state) {
         this.state = state;
     }
 
-    public double getMin() {
+    public int getMin() {
         return min;
     }
 
-    public void setMin(double min) {
+    public void setMin(int min) {
         this.min = min;
     }
 
-    public double getStep() {
+    public int getStep() {
         return step;
     }
 
-    public void setStep(double step) {
+    public void setStep(int step) {
         this.step = step;
     }
 
