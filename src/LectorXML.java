@@ -32,7 +32,8 @@ public class LectorXML {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 		}
-
+		
+		
 	}
 
 	public static void loadConfig(File file, Modelo modelo) throws SyntaxException, Exception {
