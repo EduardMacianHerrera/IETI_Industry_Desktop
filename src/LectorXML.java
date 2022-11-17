@@ -108,6 +108,9 @@ public class LectorXML {
 			throw new SyntaxException("Switch");
 		}
 		Switch s = new Switch(state, id, label);
+		if (state.equals("on")) {
+			s.setSelected(true);
+		}
 		block.addSwitch(s);
 	}
 
@@ -134,13 +137,18 @@ public class LectorXML {
 		}
 
 		Slider s = new Slider(id, label, state, min, max, step);
+		s.setValue(state);
+		s.setMinimum(min);
+		s.setMaximum(max);
+		s.setSnapToTicks(true);
+		s.setMinorTickSpacing(step);
 
 		block.addSlider(s);
 	}
 
 	public static void loadDropdown(Element elmDropdown, Block block) throws SyntaxException {
 		int id;
-		int state;
+		String state;
 		String label = elmDropdown.getAttribute("label");
 
 		if (label.equals("")) {
@@ -148,7 +156,7 @@ public class LectorXML {
 		}
 		try {
 			id = Integer.parseInt(elmDropdown.getAttribute("id"));
-			state = Integer.parseInt(elmDropdown.getAttribute("default"));
+			state = elmDropdown.getAttribute("default");
 		} catch (Exception e) {
 			throw new SyntaxException("dropdown");
 		}
@@ -158,9 +166,9 @@ public class LectorXML {
 			Node optionNode = optionList.item(i);
 			if (optionNode.getNodeType() == Node.ELEMENT_NODE) {
 				Element elmOption = (Element) optionNode;
-				int value;
+				String value;
 				try {
-					value = Integer.parseInt(elmOption.getAttribute("value"));
+					value = elmOption.getAttribute("value");
 				} catch (Exception e) {
 					throw new SyntaxException("option");
 				}
@@ -172,7 +180,15 @@ public class LectorXML {
 				d.addOption(new Option(optionLabel, value));
 			}
 		}
-
+		int index = 0;
+		for (int i = 0; i < d.getoptions().size(); i++) {
+			String value = d.getoptions().get(i).getValue();
+			if (value.equals(state)) {
+				index = i;
+			}
+		}
+		
+		d.setSelectedIndex(index);
 		block.addDropdown(d);
 	}
 

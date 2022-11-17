@@ -1,8 +1,8 @@
 public class Option {
     String label;
-    int value;
+    String value;
 
-    public Option(String label, int value) {
+    public Option(String label, String value) {
         this.label = label;
         this.value = value;
     }
@@ -15,15 +15,15 @@ public class Option {
         this.label = label;
     }
 
-    public int getValue() {
-        return value;
-    }
+    public String getValue() {
+		return value;
+	}
 
-    public void setValue(int value) {
-        this.value = value;
-    }
+	public void setValue(String value) {
+		this.value = value;
+	}
 
-    public String toString() {
+	public String toString() {
         return "label=" + label + ",value=" + value;
     }
 

@@ -1,12 +1,15 @@
 import java.util.ArrayList;
 
-public class Dropdown {
+import javax.swing.JComboBox;
+
+public class Dropdown extends JComboBox {
     String label;
     int id;
-    int state;
+    String state;
     ArrayList<Option> options = new ArrayList<Option>();
 
-    public Dropdown(String label, int id, int state) {
+    public Dropdown(String label, int id, String state) {
+    	super();
         this.label = label;
         this.id = id;
         this.state = state;
@@ -34,18 +37,17 @@ public class Dropdown {
         this.id = id;
     }
 
-    public void setState(int state) {
-        this.state = state;
-    }
+    public void setState(String state) {
+		this.state = state;
+	}
 
     public int getId() {
         return id;
     }
 
-    public int getState() {
-        return state;
-    }
-
+    public String getState() {
+		return state;
+	}
     public ArrayList<Option> getoptions() {
         return options;
     }

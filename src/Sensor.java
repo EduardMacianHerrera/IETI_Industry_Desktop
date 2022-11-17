@@ -1,4 +1,6 @@
-public class Sensor {
+import javax.swing.JTextField;
+
+public class Sensor extends JTextField {
     int id;
     String units;
     int thresholdHigh;
@@ -6,6 +8,7 @@ public class Sensor {
     String label;
 
     public Sensor(int id, String units, int thresholdHigh, int thresholdLow, String label) {
+    	super();
         this.id = id;
         this.units = units;
         this.thresholdHigh = thresholdHigh;

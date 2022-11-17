@@ -1,4 +1,6 @@
-public class Slider {
+import javax.swing.JSlider;
+
+public class Slider extends JSlider {
     int id;
     int state;
     int min;
@@ -7,6 +9,7 @@ public class Slider {
     String label;
 
     public Slider(int id, String label, int state, int min, int max, int step) {
+    	super();
         this.id = id;
         this.label = label;
         this.state = state;

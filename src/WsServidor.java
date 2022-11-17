@@ -96,6 +96,15 @@ public class WsServidor extends WebSocketServer {
 
         // Mostrem per pantalla (servidor) el missatge
         System.out.println(conn + ": " + message);
+        
+        String[] datos = (String[]) bytesToObject(message);
+        if (datos.length == 2) { // Datos login
+			String username = datos[0];
+			String password = datos[1];
+			conn.send(Database.checkLogin(username, password));
+		} else if (datos.length == 3) {
+			
+		}
     }
 
     @Override
@@ -146,5 +155,5 @@ public class WsServidor extends WebSocketServer {
         } catch (IOException e) { e.printStackTrace(); }
         return result;
     }
-  
+     
 }

@@ -11,6 +11,11 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/alum-01/Documents/IETI_Industry_Repos/IETI_Industry_Desktop/lib/password4j-1.6.2.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/Java-WebSocket-1.5.3.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-2.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-simple-2.0.3.jar"/>

@@ -1,9 +1,12 @@
-public class Switch {
+import javax.swing.JToggleButton;
+
+public class Switch extends JToggleButton{
     String state;
     int id;
     String label;
     
     public Switch(String state, int id, String label) {
+    	super();
         this.state = state;
         this.id = id;
         this.label = label;
