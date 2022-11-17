@@ -20,68 +20,70 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public class LectorXML {
-	
+
 	public static void main(String[] args) {
 		Modelo modelo = new Modelo();
-		File file = new File("conf/config_mod.xml");
+		File file = new File("conf/config.xml");
 		try {
-			cargarConfig(file, modelo);
+			loadConfig(file, modelo);
+			System.out.println(modelo.toString());
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 		}
-		
-		ArrayList<ArrayList<Control>> controles = modelo.getControles();
-		
-		for (ArrayList<Control> array : controles) {
-			for (Control control : array) {
-				System.out.println(control.getTipoControl());
-			}
-		}
-	
-		
+
 	}
 
-	public static void cargarConfig(File file, Modelo modelo) throws Exception {
-		modelo.getControles().clear();
+	public static void loadConfig(File file, Modelo modelo) throws SyntaxException, Exception {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder;
+		DocumentBuilder dBuilder;
 		try {
+			// Read XML
 			dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(file);
-	        doc.getDocumentElement().normalize();
-	        
-	        NodeList listaBloques = doc.getElementsByTagName("controls");
-	        
-	        for (int i = 0; i < listaBloques.getLength(); i++) {
-				Node nodeBloque = listaBloques.item(i);
-				ArrayList<Control> controlesBloque = new ArrayList<Control>();
-				NodeList listaControles = nodeBloque.getChildNodes();
-				for (int j = 0; j < listaControles.getLength(); j++) {
-					Node control = listaControles.item(j);
-					try {
+			doc.getDocumentElement().normalize();
+
+			// Get all control blocks
+			NodeList listaBloques = doc.getElementsByTagName("controls");
+
+			for (int i = 0; i < listaBloques.getLength(); i++) {
+				Node nodeBlock = listaBloques.item(i);
+				if (nodeBlock.getNodeType() == Node.ELEMENT_NODE) {
+					Element elmBlock = (Element) nodeBlock;
+					Block block = new Block(elmBlock.getAttribute("name"));
+					if (block.getName().equals("")) {
+						throw new SyntaxException("Syntax error");
+					}
+					NodeList controlList = elmBlock.getChildNodes();
+					for (int j = 0; j < controlList.getLength(); j++) {
+						Node control = controlList.item(j);
 						if (control.getNodeType() == Node.ELEMENT_NODE) {
-							if (control.getNodeName().equals("dropdown")) {
-								try {
-									crearDropDown(control, modelo, controlesBloque);
-								} catch (Exception e) {
-									throw new Exception("Error de formato en un control "+control.getNodeName());
-								}
-							} else {
-								addControlToModel(control, modelo, controlesBloque);
+							Element elmControl = (Element) control;
+							switch (elmControl.getTagName()) {
+								case "switch":
+									loadSwitch(elmControl, block);
+									break;
+								case "slider":
+									loadSlider(elmControl, block);
+									break;
+								case "dropdown":
+									loadDropdown(elmControl, block);
+									break;
+								case "sensor":
+									loadSensor(elmControl, block);
+									break;
 							}
 						}
-					} catch (Exception e) {
-						throw new Exception(e.getMessage());
 					}
-					
+					modelo.addBlock(block);
 				}
-				modelo.getControles().add(controlesBloque);
 			}
-	        
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (SyntaxException e) {
+			throw new Exception(e.getMessage());
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
 			throw new Exception("El archivo xml no tiene el formato correcto");
@@ -89,106 +91,107 @@ public class LectorXML {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-	}
-	
-	public static void addControlToModel(Node control, Modelo modelo, ArrayList<Control> controlesBloque) throws Exception {
-		String tipoControl = control.getNodeName();
-		String labelControl = control.getTextContent();
-		Element elmControl = (Element) control;
-		String id = elmControl.getAttribute("id");
-		Control controlTemp;
-		try {
-			controlTemp = crearControl(id, labelControl, tipoControl, elmControl);
-			controlesBloque.add(controlTemp);
-		} catch (Exception e) {
-			throw new Exception("Error de formato en un control "+control.getNodeName());
-		}
-		
-		
-		
-	}
-	
-	public static Control crearControl(String id, String labelControl, String tipoControl, Element elmControl) throws Exception {
-		if (id.equals("") || labelControl.equals("") || tipoControl.equals("")) {
-			throw new Exception();
-		}
-		Control controlTemp = new Control();
-		controlTemp.setId(id);
-		controlTemp.setLabel(labelControl);
-		controlTemp.setTipoControl(tipoControl);
-		switch (tipoControl) {
-		case "switch":
-			JToggleButton interruptor = new JToggleButton();
-			if (elmControl.getAttribute("default").equals("on")) {
-				interruptor.setSelected(true);
-			} else {
-				interruptor.setSelected(false);
-			}
-			
-			controlTemp.setControl(interruptor);
-			//modelo.getControles().add(controlTemp);
-			break;
 
-		case "slider":
-			JSlider slider = new JSlider();
-			slider.setMinimum(Integer.valueOf(elmControl.getAttribute("min"))* 10);
-			slider.setMaximum(Integer.valueOf(elmControl.getAttribute("max"))* 10);
-			slider.setValue((int)(Double.valueOf(elmControl.getAttribute("default"))* 10));
-			// Mirar lo de los tick y multiplicar por 10
-			
-			controlTemp.setControl(slider);
-			
-			break;
-			
-			
-		case "sensor":
-			JTextField textField = new JTextField();
-			textField.setColumns(5); // MIRAR DE HACER AUTOMATICO
-			
-			controlTemp.setUnits(elmControl.getAttribute("units"));
-			controlTemp.setThresholdLow(Integer.valueOf(elmControl.getAttribute("thresholdlow")));
-			controlTemp.setThresholdHigh(Integer.valueOf(elmControl.getAttribute("thresholdhigh")));
-			controlTemp.setControl(textField);
-			break;
-			
-		default:
-			break;
-		}
-		
-		return controlTemp;
 	}
-	
-	public static void crearDropDown(Node control, Modelo modelo, ArrayList<Control> controlesBloque) {
-		NodeList listaOpciones = control.getChildNodes();
-		Element elmDropdown = (Element) control;
-		JComboBox comboBox = new JComboBox();
-		ArrayList<String> labelsComboBox = new ArrayList<String>();
-		ArrayList<String> valoresComboBox = new ArrayList<String>();
-		
-		for (int k = 0; k < listaOpciones.getLength(); k++) {
-			Node opcion = listaOpciones.item(k);
-			if (opcion.getNodeType() == Node.ELEMENT_NODE) {
-				Element elmOpcion = (Element) opcion;
-				labelsComboBox.add(opcion.getTextContent());
-				valoresComboBox.add(elmOpcion.getAttribute("value"));
+
+	public static void loadSwitch(Element elmSwitch, Block block) throws SyntaxException {
+		String state = elmSwitch.getAttribute("default");
+		String label = elmSwitch.getTextContent();
+		int id;
+		if (state.equals("") || label.equals("")) {
+			throw new SyntaxException("Switch");
+		}
+		try {
+			id = Integer.parseInt(elmSwitch.getAttribute("id"));
+		} catch (Exception e) {
+			throw new SyntaxException("Switch");
+		}
+		Switch s = new Switch(state, id, label);
+		block.addSwitch(s);
+	}
+
+	public static void loadSlider(Element elmSlider, Block block) throws SyntaxException {
+		int id;
+		double state;
+		double min;
+		double max;
+		double step;
+		String label = elmSlider.getTextContent();
+
+		if (label.equals("")) {
+			throw new SyntaxException("Slider");
+		}
+
+		try {
+			id = Integer.parseInt(elmSlider.getAttribute("id"));
+			state = Double.parseDouble(elmSlider.getAttribute("default"));
+			min = Double.parseDouble(elmSlider.getAttribute("min"));
+			max = Double.parseDouble(elmSlider.getAttribute("max"));
+			step = Double.parseDouble(elmSlider.getAttribute("step"));
+		} catch (Exception e) {
+			throw new SyntaxException("Slider");
+		}
+
+		Slider s = new Slider(id, label, state, min, max, step);
+
+		block.addSlider(s);
+	}
+
+	public static void loadDropdown(Element elmDropdown, Block block) throws SyntaxException {
+		int id;
+		int state;
+		String label = elmDropdown.getAttribute("label");
+
+		if (label.equals("")) {
+			throw new SyntaxException("dropdown");
+		}
+		try {
+			id = Integer.parseInt(elmDropdown.getAttribute("id"));
+			state = Integer.parseInt(elmDropdown.getAttribute("default"));
+		} catch (Exception e) {
+			throw new SyntaxException("dropdown");
+		}
+		Dropdown d = new Dropdown(label, id, state);
+		NodeList optionList = elmDropdown.getChildNodes();
+		for (int i = 0; i < optionList.getLength(); i++) {
+			Node optionNode = optionList.item(i);
+			if (optionNode.getNodeType() == Node.ELEMENT_NODE) {
+				Element elmOption = (Element) optionNode;
+				int value;
+				try {
+					value = Integer.parseInt(elmOption.getAttribute("value"));
+				} catch (Exception e) {
+					throw new SyntaxException("option");
+				}
+				String optionLabel = elmOption.getTextContent();
+				if (optionLabel.equals("")) {
+					throw new SyntaxException("option");
+				}
+
+				d.addOption(new Option(optionLabel, value));
 			}
 		}
-		
-		DefaultComboBoxModel modeloComboBox = new DefaultComboBoxModel(labelsComboBox.toArray());
-		comboBox.setModel(modeloComboBox);
-		comboBox.setSelectedItem(labelsComboBox.get(valoresComboBox.indexOf(elmDropdown.getAttribute("default")))); // Coge el atributo default, lo busca en la lista de valores,
-																													//  saca el indice y selecciona la label por defecto
-		Control controlTemp = new Control();
-		controlTemp.setId(elmDropdown.getAttribute("id"));
-		controlTemp.setLabel(elmDropdown.getAttribute("label"));
-		controlTemp.setControl(comboBox);
-		controlTemp.setLabelsComboBox(labelsComboBox);
-		controlTemp.setValoresComboBox(valoresComboBox);
-		controlTemp.setTipoControl("dropdown");
-		
-		controlesBloque.add(controlTemp);
+
+		block.addDropdown(d);
 	}
-	
-	
+
+	public static void loadSensor(Element elmSensor, Block block) throws SyntaxException {
+		int id;
+		int thresholdHigh;
+		int thresholdLow;
+		String units = elmSensor.getAttribute("units");
+		String label = elmSensor.getTextContent();
+
+		try {
+			id = Integer.parseInt(elmSensor.getAttribute("id"));
+			thresholdLow = Integer.parseInt(elmSensor.getAttribute("thresholdlow"));
+			thresholdHigh = Integer.parseInt(elmSensor.getAttribute("thresholdhigh"));
+		} catch (Exception e) {
+			throw new SyntaxException("sensor");
+		}
+
+		Sensor s = new Sensor(id, units, thresholdHigh, thresholdLow, label);
+		block.addSensor(s);
+	}
+
 }

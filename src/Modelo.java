@@ -7,22 +7,37 @@ import javax.swing.JToggleButton;
 
 public class Modelo {
 
-	
-	private ArrayList<ArrayList<Control>> controles = new ArrayList<ArrayList<Control>>();
-	
+	private ArrayList<Block> blocks = new ArrayList<Block>();
+
 	public Modelo() {
-		super();
 	}
 
-	public ArrayList<ArrayList<Control>> getControles() {
-		return controles;
+	public ArrayList<Block> getBlocks() {
+		return blocks;
 	}
 
-	public void setControles(ArrayList<ArrayList<Control>> controles) {
-		this.controles = controles;
+	public void addBlock(Block block) {
+		blocks.add(block);
 	}
-	
-	
-	
-	
+
+	public String toString() {
+		String output = "";
+		for (Block b : blocks) {
+			output += b.getName() + ":[";
+			for (Switch s : b.getSwitches()) {
+				output += s.toString();
+			}
+			for (Slider s : b.getSliders()) {
+				output += s.toString();
+			}
+			for (Dropdown d : b.getDropdowns()) {
+				output += d.toString();
+			}
+			for (Sensor s : b.getSensors()) {
+				output += s.toString();
+			}
+			output+="];";
+		}
+		return output;
+	}
 }
