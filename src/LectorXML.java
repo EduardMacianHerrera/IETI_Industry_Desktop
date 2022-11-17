@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
@@ -30,11 +31,12 @@ public class LectorXML {
 			System.out.println(e.getMessage());
 		}
 		
-		ArrayList<Control> controles = modelo.getControles();
+		ArrayList<ArrayList<Control>> controles = modelo.getControles();
 		
-		for (Control control : controles) {
-			System.out.println(control.getTipoControl());
-			System.out.println(control.getLabel());
+		for (ArrayList<Control> array : controles) {
+			for (Control control : array) {
+				System.out.println(control.getTipoControl());
+			}
 		}
 	}
 
@@ -51,6 +53,7 @@ public class LectorXML {
 	        
 	        for (int i = 0; i < listaBloques.getLength(); i++) {
 				Node nodeBloque = listaBloques.item(i);
+				ArrayList<Control> controlesBloque = new ArrayList<Control>();
 				NodeList listaControles = nodeBloque.getChildNodes();
 				for (int j = 0; j < listaControles.getLength(); j++) {
 					Node control = listaControles.item(j);
@@ -58,18 +61,19 @@ public class LectorXML {
 						if (control.getNodeType() == Node.ELEMENT_NODE) {
 							if (control.getNodeName().equals("dropdown")) {
 								try {
-									crearDropDown(control, modelo);
+									crearDropDown(control, modelo, controlesBloque);
 								} catch (Exception e) {
 									throw new Exception("Error de formato en un control "+control.getNodeName());
 								}
 							} else {
-								addControlToModel(control, modelo);
+								addControlToModel(control, modelo, controlesBloque);
 							}
 						}
 					} catch (Exception e) {
 						throw new Exception(e.getMessage());
 					}
 				}
+				modelo.getControles().add(controlesBloque);
 			}
 	        
 		} catch (ParserConfigurationException e) {
@@ -85,7 +89,7 @@ public class LectorXML {
         
 	}
 	
-	public static void addControlToModel(Node control, Modelo modelo) throws Exception {
+	public static void addControlToModel(Node control, Modelo modelo, ArrayList<Control> controlesBloque) throws Exception {
 		String tipoControl = control.getNodeName();
 		String labelControl = control.getTextContent();
 		Element elmControl = (Element) control;
@@ -93,7 +97,7 @@ public class LectorXML {
 		Control controlTemp;
 		try {
 			controlTemp = crearControl(id, labelControl, tipoControl, elmControl);
-			modelo.getControles().add(controlTemp);
+			controlesBloque.add(controlTemp);
 		} catch (Exception e) {
 			throw new Exception("Error de formato en un control "+control.getNodeName());
 		}
@@ -103,7 +107,7 @@ public class LectorXML {
 	}
 	
 	public static Control crearControl(String id, String labelControl, String tipoControl, Element elmControl) throws Exception {
-		if (id.equals("") || labelControl.equals("") || tipoControl.equals("") || elmControl.equals("")) {
+		if (id.equals("") || labelControl.equals("") || tipoControl.equals("")) {
 			throw new Exception();
 		}
 		Control controlTemp = new Control();
@@ -152,7 +156,7 @@ public class LectorXML {
 		return controlTemp;
 	}
 	
-	public static void crearDropDown(Node control, Modelo modelo) {
+	public static void crearDropDown(Node control, Modelo modelo, ArrayList<Control> controlesBloque) {
 		NodeList listaOpciones = control.getChildNodes();
 		Element elmDropdown = (Element) control;
 		JComboBox comboBox = new JComboBox();
@@ -174,12 +178,14 @@ public class LectorXML {
 																													//  saca el indice y selecciona la label por defecto
 		Control controlTemp = new Control();
 		controlTemp.setId(elmDropdown.getAttribute("id"));
+		controlTemp.setLabel(elmDropdown.getAttribute("label"));
 		controlTemp.setControl(comboBox);
 		controlTemp.setLabelsComboBox(labelsComboBox);
 		controlTemp.setValoresComboBox(valoresComboBox);
 		controlTemp.setTipoControl("dropdown");
 		
-		modelo.getControles().add(controlTemp);
+		controlesBloque.add(controlTemp);
 	}
+	
 	
 }

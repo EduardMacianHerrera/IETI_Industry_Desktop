@@ -7,19 +7,21 @@ import javax.swing.JToggleButton;
 
 public class Modelo {
 
-	private ArrayList<Control> controles = new ArrayList<Control>();
 	
+	private ArrayList<ArrayList<Control>> controles = new ArrayList<ArrayList<Control>>();
 	
 	public Modelo() {
 		super();
 	}
-	
-	public ArrayList<Control> getControles() {
+
+	public ArrayList<ArrayList<Control>> getControles() {
 		return controles;
 	}
-	public void setControles(ArrayList<Control> controles) {
+
+	public void setControles(ArrayList<ArrayList<Control>> controles) {
 		this.controles = controles;
 	}
+	
 	
 	
 	
