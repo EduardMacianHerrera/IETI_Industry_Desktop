@@ -102,6 +102,19 @@ public class interfazMenuDesktop extends JFrame {
 		JMenuItem opcioVisualitzacions = new JMenuItem("Visualitzacions");
 		menuOpciones.add(opcioVisualitzacions);
 		
+		JMenuItem opcioReiniciar=new JMenuItem("Reiniciar");
+		opcioReiniciar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panelSliders.removeAll();
+				panelJComboBox.removeAll();
+				panelJTextField.removeAll();
+				panelToggleButtons.removeAll();
+				contentPane.revalidate();
+				contentPane.repaint();
+				System.out.println("Elements eliminats");
+			}
+		});
+		menuOpciones.add(opcioReiniciar);
 		
 	}
 	

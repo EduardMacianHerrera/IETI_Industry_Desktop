@@ -36,8 +36,6 @@ public class LectorXML {
 			System.out.println(control.getTipoControl());
 			System.out.println(control.getLabel());
 		}
-	
-		
 	}
 
 	public static void cargarConfig(File file, Modelo modelo) throws Exception {
@@ -71,7 +69,6 @@ public class LectorXML {
 					} catch (Exception e) {
 						throw new Exception(e.getMessage());
 					}
-					
 				}
 			}
 	        
