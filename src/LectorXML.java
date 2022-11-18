@@ -102,12 +102,12 @@ public class LectorXML {
 		String label = elmSwitch.getTextContent();
 		int id;
 		if (state.equals("") || label.equals("")) {
-			throw new SyntaxException("Switch");
+			throw new SyntaxException("Error de formato en un switch");
 		}
 		try {
 			id = Integer.parseInt(elmSwitch.getAttribute("id"));
 		} catch (Exception e) {
-			throw new SyntaxException("Switch");
+			throw new SyntaxException("Error de formato en un switch");
 		}
 		Switch s = new Switch(state, id, label);
 		if (state.equals("on")) {
@@ -125,7 +125,7 @@ public class LectorXML {
 		String label = elmSlider.getTextContent();
 
 		if (label.equals("")) {
-			throw new SyntaxException("Slider");
+			throw new SyntaxException("Error de formato en un slider");
 		}
 
 		try {
@@ -135,7 +135,7 @@ public class LectorXML {
 			max = Integer.parseInt(elmSlider.getAttribute("max"));
 			step = Integer.parseInt(elmSlider.getAttribute("step"));
 		} catch (Exception e) {
-			throw new SyntaxException("Slider");
+			throw new SyntaxException("Error de formato en un slider");
 		}
 
 		Slider s = new Slider(id, label, state, min, max, step);
@@ -173,11 +173,11 @@ public class LectorXML {
 				try {
 					value = elmOption.getAttribute("value");
 				} catch (Exception e) {
-					throw new SyntaxException("option");
+					throw new SyntaxException("Error de formato en una option");
 				}
 				String optionLabel = elmOption.getTextContent();
 				if (optionLabel.equals("")) {
-					throw new SyntaxException("option");
+					throw new SyntaxException("Error de formato en una option");
 				}
 				labels.add(optionLabel);
 				d.addOption(new Option(optionLabel, value));
@@ -194,7 +194,6 @@ public class LectorXML {
 				index = i;
 			}
 		}
-		System.out.println("indice: "+index);
 		d.setSelectedIndex(index);
 		block.addDropdown(d);
 	}
@@ -211,7 +210,7 @@ public class LectorXML {
 			thresholdLow = Integer.parseInt(elmSensor.getAttribute("thresholdlow"));
 			thresholdHigh = Integer.parseInt(elmSensor.getAttribute("thresholdhigh"));
 		} catch (Exception e) {
-			throw new SyntaxException("sensor");
+			throw new SyntaxException("Error de formato en un sensor");
 		}
 
 		Sensor s = new Sensor(id, units, thresholdHigh, thresholdLow, label);

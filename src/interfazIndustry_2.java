@@ -37,7 +37,8 @@ import javax.swing.JOptionPane;
 
 public class interfazIndustry_2 extends JFrame {
 	
-    public static void main(String[] args) {   
+    public static void main(String[] args) { 
+    	System.out.println("AAAAAAAAA");
         Modelo modelo = new Modelo();
         interfazIndustry_2 interfaz = new interfazIndustry_2(modelo);
         interfaz.setVisible(true);
@@ -171,7 +172,7 @@ public class interfazIndustry_2 extends JFrame {
 			contentPane.add(panelScroll, BorderLayout.CENTER);
 		}
 		public void mostrarMissatgeError(JPanel lamina, String mensajeError) {
-			JOptionPane.showMessageDialog(lamina, mensajeError, "lectura XML incorrecta", 0);
+			JOptionPane.showMessageDialog(lamina, mensajeError, "Lectura XML incorrecta", 0);
 		}
 		
 		//Metodo para colocar los elementos
