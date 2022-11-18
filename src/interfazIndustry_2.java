@@ -52,10 +52,12 @@ public class interfazIndustry_2 extends JFrame {
 		private JPanel panelControles;
 		private Border bordeGris1;
 		private Border bordeVacio1;
+		private static Modelo modelo;
 		
 		boolean scrollHabilitado=true;
 		
 		public interfazIndustry_2(final Modelo modelo) {
+			this.modelo = modelo;
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			
 			bordeGris1=BorderFactory.createLineBorder(Color.LIGHT_GRAY, 3);
@@ -96,9 +98,21 @@ public class interfazIndustry_2 extends JFrame {
 						contentPane.repaint();
 					}
 				}
-			});
+			});			
 			
 			menuOpciones.add(opcioArxiu);
+			
+			JMenuItem prueba = new JMenuItem("TEST");
+			prueba.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("TEST");
+					String[] arrays = {"block1","1","slider","2"};
+					updateInterfaz(arrays);
+				}
+			});
+			menuOpciones.add(prueba);
 			
 			JMenuItem opcioVisualitzacions = new JMenuItem("Visualitzacions");
 			menuOpciones.add(opcioVisualitzacions);
@@ -164,7 +178,6 @@ public class interfazIndustry_2 extends JFrame {
 		public void colocarElements(Modelo modelo) {
 			ArrayList<Block> listaBloques = modelo.getBlocks();
 			for(Block bloqueInsertar:listaBloques) {
-				System.out.println("Inserta un bloque");
 				JPanel panelBloque=new JPanel();
 				panelBloque.setBackground(Color.CYAN);
 				panelBloque.setPreferredSize(new Dimension(400,400));
@@ -176,7 +189,6 @@ public class interfazIndustry_2 extends JFrame {
 			    
 			    //Primero coloca los switches
 			    for(Switch sw:switches) {
-					System.out.println("Hemos colocado un switch");
 			    	JPanel panelControl=new JPanel();
 			    	panelControl.setBackground(Color.LIGHT_GRAY);
 			    	String etiqueta=sw.getLabel();
@@ -188,11 +200,9 @@ public class interfazIndustry_2 extends JFrame {
 			    
 			    //Segundo coloca los sliders
 			    for(Slider sl:sliders) {
-					System.out.println("Hemos colocado un slider");
 			    	JPanel panelControl=new JPanel();
 			    	panelControl.setBackground(Color.LIGHT_GRAY);
 			    	String etiqueta=sl.getLabel();
-					System.out.println("Slider añadido :"+sl.getMin()+" "+sl.getMaximum());
 			    	
 			    	panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(sl);
@@ -201,7 +211,6 @@ public class interfazIndustry_2 extends JFrame {
 			    
 			    //Tercero coloca los depslegables
 			    for(Dropdown dpd: dropdowns) {
-					System.out.println("Hemos colocado un desplegable");
 			    	JPanel panelControl=new JPanel();
 			    	panelControl.setBackground(Color.LIGHT_GRAY);
 			    	String etiqueta=dpd.getLabel();
@@ -213,7 +222,6 @@ public class interfazIndustry_2 extends JFrame {
 			    
 			    //Cuarto y ultimo coloca los sensores
 			    for(Sensor sn:sensors) {
-					System.out.println("Hemos colocado un sensor");
 			    	JPanel panelControl=new JPanel();
 			    	panelControl.setBackground(Color.LIGHT_GRAY);
 			    	String etiqueta=sn.getLabel();
@@ -260,5 +268,57 @@ public class interfazIndustry_2 extends JFrame {
 			}
 		}
 		
+		//[[block1,2,slider,2],[block1,3,dropdown,1]]
+		
+		public static void updateInterfaz(String[] arrays) {
+			String nameBlock = arrays[0];
+			String id = arrays[1];
+			String type = arrays[2];
+			String value = arrays[3];
+			for (Block b : modelo.getBlocks()) {
+				if (b.getName().equals(nameBlock)) {
+					switch (type) {
+					case "switch":
+						for (Switch s : b.getSwitches()) {
+							if (id.equals(String.valueOf(s.getId()))) {
+								if (value.equals("on")) {
+									s.setSelected(true);
+								} else {
+									s.setSelected(false);
+								}
+							}
+						}
+						break;
+						
+					case "slider":
+						for (Slider s : b.getSliders()) {
+							if (id.equals(String.valueOf(s.getId()))) {
+								s.setValue(Integer.parseInt(value));
+							}
+						}
+						break;
+						
+					case "dropdown":
+						for (Dropdown d : b.getDropdowns()) {
+							if (id.equals(String.valueOf(d.getId()))) {
+								d.setSelectedIndex(Integer.parseInt(value));
+							}
+						}
+						break;
+						
+					case "sensor":
+						for (Sensor s : b.getSensors()) {
+							if (id.equals(String.valueOf(s.getId()))) {
+								s.setText(value);
+							}
+						}
+						break;
 
+					default:
+						break;
+					}
+				}
+			}
+		}
+		
 }

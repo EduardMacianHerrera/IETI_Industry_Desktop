@@ -38,6 +38,7 @@ public class LectorXML {
 	}
 
 	public static void loadConfig(File file, Modelo modelo) throws SyntaxException, Exception {
+		modelo.getBlocks().clear();
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder;
 		try {

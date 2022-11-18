@@ -97,7 +97,6 @@ public class Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        System.out.println("Id: "+id);
         
         UtilsSQLite.queryUpdate(connSalt, "insert into salt (idUser,salt) values ("+id+",'"+pwdSalt+"');");
         UtilsSQLite.queryUpdate(connPepper, "insert into pepper (idUser,pepper) values ("+id+",'"+pwdPepper+"');");
@@ -124,8 +123,6 @@ public class Database {
 			e.printStackTrace();
 		}
         
-        System.out.println(idUser);
-        
         ResultSet rsSalt = UtilsSQLite.querySelect(connSalt, "select salt from salt where idUser = "+idUser+";");
         String pwdSalt = "";
         try {
@@ -135,8 +132,6 @@ public class Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-        System.out.println(pwdSalt);
         
         ResultSet rsPepper = UtilsSQLite.querySelect(connPepper, "select pepper from pepper where idUser = "+idUser+";");
         String pwdPepper = "";
@@ -148,7 +143,6 @@ public class Database {
 			e.printStackTrace();
 		}
         
-        System.out.println(pwdPepper);
         boolean check;
         
         if (pwdSalt != null && pwdSalt != null && pwdPepper != null) {
