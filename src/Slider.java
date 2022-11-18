@@ -55,5 +55,22 @@ public class Slider extends JSlider {
         this.step = step;
     }
 
+	public int getMax() {
+		return max;
+	}
+
+	public void setMax(int max) {
+		this.max = max;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+    
     
 }

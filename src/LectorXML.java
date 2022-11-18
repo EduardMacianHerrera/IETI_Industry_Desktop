@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JSlider;
@@ -162,6 +163,7 @@ public class LectorXML {
 		}
 		Dropdown d = new Dropdown(label, id, state);
 		NodeList optionList = elmDropdown.getChildNodes();
+		ArrayList<String> labels = new ArrayList<String>();
 		for (int i = 0; i < optionList.getLength(); i++) {
 			Node optionNode = optionList.item(i);
 			if (optionNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -176,10 +178,14 @@ public class LectorXML {
 				if (optionLabel.equals("")) {
 					throw new SyntaxException("option");
 				}
-
+				labels.add(optionLabel);
 				d.addOption(new Option(optionLabel, value));
 			}
 		}
+		
+		DefaultComboBoxModel modeloComboBox = new DefaultComboBoxModel(labels.toArray());
+		d.setModel(modeloComboBox);
+		
 		int index = 0;
 		for (int i = 0; i < d.getoptions().size(); i++) {
 			String value = d.getoptions().get(i).getValue();
@@ -187,7 +193,7 @@ public class LectorXML {
 				index = i;
 			}
 		}
-		
+		System.out.println("indice: "+index);
 		d.setSelectedIndex(index);
 		block.addDropdown(d);
 	}

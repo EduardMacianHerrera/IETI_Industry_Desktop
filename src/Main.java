@@ -12,7 +12,7 @@ public class Main {
         }
         
         modelo = new Modelo();
-        interfazMenuDesktop interfaz = new interfazMenuDesktop(modelo);
+        interfazIndustry_2 interfaz = new interfazIndustry_2(modelo);
         interfaz.setVisible(true);
         
     }
