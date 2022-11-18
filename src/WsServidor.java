@@ -103,7 +103,7 @@ public class WsServidor extends WebSocketServer {
 			String password = datos[1];
 			conn.send(Database.checkLogin(username, password));
 		} else if (datos.length == 3) {
-			
+			interfazIndustry_2.updateInterfaz(datos);
 		}
     }
 
