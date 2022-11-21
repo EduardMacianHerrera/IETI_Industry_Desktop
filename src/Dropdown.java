@@ -25,7 +25,7 @@ public class Dropdown extends JComboBox {
         for (Option o : options) {
             output+= "label="+ o.getLabel() + "&value=" + o.getValue() + "$";
         }
-        output += "];";
+        output += "],];";
         return output;
     }
 

@@ -59,7 +59,7 @@ public class Sensor extends JTextField {
     @Override
     public String toString() {
         return "Sensor:[id=" + id + ",units=" + units + ",thresholdHigh=" + thresholdHigh + ",thresholdLow="
-                + thresholdLow + ",label=" + label + "];";
+                + thresholdLow + ",label=" + label + ",];";
     }
 
 
