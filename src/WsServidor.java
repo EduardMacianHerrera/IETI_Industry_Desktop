@@ -55,10 +55,10 @@ public class WsServidor extends WebSocketServer {
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
 
         // Saludem personalment al nou client
-        conn.send("Benvingut a WsServer");
+        //conn.send("Benvingut a WsServer");
 
         // Enviem la direcció URI del nou client a tothom
-        broadcast("Nova connexió: " + handshake.getResourceDescriptor());
+        //broadcast("Nova connexió: " + handshake.getResourceDescriptor());
 
         // Mostrem per pantalla (servidor) la nova connexió
         String host = conn.getRemoteSocketAddress().getAddress().getHostAddress();
@@ -69,7 +69,7 @@ public class WsServidor extends WebSocketServer {
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
 
         // Informem a tothom que el client s'ha desconnectat
-        broadcast(conn + " s'ha desconnectat");
+        //broadcast(conn + " s'ha desconnectat");
 
         // Mostrem per pantalla (servidor) la desconnexió
         System.out.println(conn + " s'ha desconnectat");
