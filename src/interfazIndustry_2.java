@@ -257,6 +257,7 @@ public class interfazIndustry_2 extends JFrame {
 						for (Slider s : b.getSliders()) {
 							if (id.equals(String.valueOf(s.getId()))) {
 								s.setValue(Integer.parseInt(value));
+								s.setState(Integer.parseInt(value));
 							}
 						}
 						break;
@@ -265,6 +266,7 @@ public class interfazIndustry_2 extends JFrame {
 						for (Dropdown d : b.getDropdowns()) {
 							if (id.equals(String.valueOf(d.getId()))) {
 								d.setSelectedIndex(Integer.parseInt(value));
+								d.setState(value);
 							}
 						}
 						break;
