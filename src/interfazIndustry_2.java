@@ -38,7 +38,6 @@ import javax.swing.JOptionPane;
 public class interfazIndustry_2 extends JFrame {
 	
     public static void main(String[] args) { 
-    	System.out.println("AAAAAAAAA");
         Modelo modelo = new Modelo();
         interfazIndustry_2 interfaz = new interfazIndustry_2(modelo);
         interfaz.setVisible(true);
@@ -94,6 +93,7 @@ public class interfazIndustry_2 extends JFrame {
 							mostrarMissatgeError(contentPane,e1.getMessage());
 							modelo.getBlocks().clear();
 						}
+						System.out.println(modelo.toString());
 						colocarElements(modelo);
 						contentPane.revalidate();
 						contentPane.repaint();
@@ -113,12 +113,10 @@ public class interfazIndustry_2 extends JFrame {
 					updateInterfaz(arrays);
 				}
 			});
-			menuOpciones.add(prueba);
+			//menuOpciones.add(prueba);
 			
-			JMenuItem opcioVisualitzacions = new JMenuItem("Visualitzacions");
+			JMenu opcioVisualitzacions = new JMenu("Visualitzacions");
 			menuOpciones.add(opcioVisualitzacions);
-			
-			menuOpciones.add(new JSeparator());
 			
 			JMenuItem opcioBloquearScroll=new JMenuItem("Bloquear barras Scroll");
 			opcioBloquearScroll.addActionListener(new ActionListener() {
@@ -135,24 +133,8 @@ public class interfazIndustry_2 extends JFrame {
 
 				}
 			});
-			menuOpciones.add(opcioBloquearScroll);
-			
-			JMenuItem pruebaCargarElementos=new JMenuItem("Prueba de Carga Areas Texto");
-			pruebaCargarElementos.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					colocarElementsProva1();
-				}
-			});
-			menuOpciones.add(pruebaCargarElementos);
-			
-			JMenuItem pruebaCargarPaneles=new JMenuItem("Prueba de Carga de Paneles");
-			pruebaCargarPaneles.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					colocarElementsProva2();
-				}
-			});
-			menuOpciones.add(pruebaCargarPaneles);
-			
+			opcioVisualitzacions.add(opcioBloquearScroll);
+						
 			JMenuItem pruebaVaciarElementos=new JMenuItem("Vaciar Panel de Controles");
 			pruebaVaciarElementos.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -180,7 +162,6 @@ public class interfazIndustry_2 extends JFrame {
 			ArrayList<Block> listaBloques = modelo.getBlocks();
 			for(Block bloqueInsertar:listaBloques) {
 				JPanel panelBloque=new JPanel();
-				panelBloque.setBackground(Color.CYAN);
 				panelBloque.setPreferredSize(new Dimension(400,400));
 				
 				ArrayList<Switch> switches = bloqueInsertar.getSwitches();
@@ -246,29 +227,7 @@ public class interfazIndustry_2 extends JFrame {
 			panelControles.revalidate();
 		}
 		
-		//Funcion de prueba, no es definitiva
-		public void colocarElementsProva1() {
-			for(int i=0; i<5; i++) {
-				JTextArea areaAdd=new JTextArea("Area de texto de prueba\n"
-						+ "Con un salto de linea");
-				areaAdd.setPreferredSize(new Dimension(600,600));
-				panelControles.add(areaAdd);
-				panelControles.repaint();
-				panelControles.revalidate();
-			}
-		}
-		
-		public void colocarElementsProva2() {
-			for(int i=0; i<4;i++) {
-				JPanel panelColocar=new JPanel();
-				panelColocar.setPreferredSize(new Dimension(400, 400));
-				panelColocar.setBackground(Color.CYAN);
-				panelControles.add(panelColocar);
-				panelControles.repaint();
-				panelControles.revalidate();
-			}
-		}
-		
+				
 		//[[block1,2,slider,2],[block1,3,dropdown,1]]
 		
 		public static void updateInterfaz(String[] arrays) {
