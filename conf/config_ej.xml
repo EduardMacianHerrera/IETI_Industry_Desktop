@@ -1,0 +1,15 @@
+<root>
+    <controls name="block1">
+        <switch id="0" default="on">Encendido Maquina 1</switch>
+        <switch id="1" default="off">Encendido Maquina 2</switch>
+        <switch id="2" default="off">Encendido Maquina 3</switch>
+        <slider id="3" default="4" min="0" max="12" step="1">RPM</slider>
+        <slider id="4" default="4" min="3" max="10" step="1">Label</slider>
+        <dropdown id="5" default="3" label="Velocidad">
+            <option value="2">Lenta</option>
+            <option value="3">Rapida</option>
+        </dropdown>
+        <sensor id="6" units="ºC" thresholdlow="5" thresholdhigh="10">Temperatura</sensor>
+    </controls>
+
+</root>
