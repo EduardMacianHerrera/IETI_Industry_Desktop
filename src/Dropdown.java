@@ -23,7 +23,7 @@ public class Dropdown extends JComboBox {
     public String toString() {
         String output = "Dropdown:[label=" + label + ",id=" + id + ",state=" + state + ",options=[";
         for (Option o : options) {
-            output+= "label="+ o.getLabel() + ",value=" + o.getValue() + ";";
+            output+= "label="+ o.getLabel() + "&value=" + o.getValue() + "$";
         }
         output += "];";
         return output;

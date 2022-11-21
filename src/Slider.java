@@ -20,7 +20,7 @@ public class Slider extends JSlider {
 
     @Override
     public String toString() {
-        return "Slider:[label="+ label + ",id=" + id + ",state=" + state + ",min=" + min + ",step=" + step + "];";
+        return "Slider:[label="+ label + ",id=" + id + ",state=" + state + ",min=" + min + ",max=" + max + ",step=" + step + "];";
     }
 
     public int getId() {

@@ -14,7 +14,7 @@ public class Switch extends JToggleButton{
 
     @Override
     public String toString() {
-        return "Switch:[state=" + state + ",id=" + id + "];";
+        return "Switch:[state=" + state + ",id=" + id + ",label=" + label + "];";
     }
 
     public String getState() {

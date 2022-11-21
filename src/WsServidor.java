@@ -87,7 +87,7 @@ public class WsServidor extends WebSocketServer {
 
 
         } else if (message.equalsIgnoreCase("getModel")) {
-            conn.send(objToBytes(Main.modelo));
+            conn.send(Main.modelo.toString());
         }
     }
 
