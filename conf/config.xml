@@ -9,7 +9,4 @@
         <sensor id="3" units="ºC" thresholdlow="5" thresholdhigh="10">Label</sensor>
     </controls>
 
-    <controls name="block2">
-    </controls>
-
 </root>

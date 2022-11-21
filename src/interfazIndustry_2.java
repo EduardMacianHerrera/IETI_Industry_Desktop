@@ -244,8 +244,10 @@ public class interfazIndustry_2 extends JFrame {
 							if (id.equals(String.valueOf(s.getId()))) {
 								if (value.equals("on")) {
 									s.setSelected(true);
+									s.setState("on");
 								} else {
 									s.setSelected(false);
+									s.setState("off");
 								}
 							}
 						}
