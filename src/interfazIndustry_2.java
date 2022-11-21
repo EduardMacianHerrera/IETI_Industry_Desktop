@@ -94,6 +94,7 @@ public class interfazIndustry_2 extends JFrame {
 							modelo.getBlocks().clear();
 						}
 						System.out.println(modelo.toString());
+						vaciarPanelControles();
 						colocarElements(modelo);
 						contentPane.revalidate();
 						contentPane.repaint();
@@ -115,7 +116,7 @@ public class interfazIndustry_2 extends JFrame {
 			});
 			//menuOpciones.add(prueba);
 			
-			JMenu opcioVisualitzacions = new JMenu("Visualitzacions");
+			JMenuItem opcioVisualitzacions = new JMenuItem("Visualitzacions");
 			menuOpciones.add(opcioVisualitzacions);
 			
 			JMenuItem opcioBloquearScroll=new JMenuItem("Bloquear barras Scroll");
@@ -133,7 +134,7 @@ public class interfazIndustry_2 extends JFrame {
 
 				}
 			});
-			opcioVisualitzacions.add(opcioBloquearScroll);
+			//opcioVisualitzacions.add(opcioBloquearScroll);
 						
 			JMenuItem pruebaVaciarElementos=new JMenuItem("Vaciar Panel de Controles");
 			pruebaVaciarElementos.addActionListener(new ActionListener() {
@@ -141,7 +142,7 @@ public class interfazIndustry_2 extends JFrame {
 					vaciarPanelControles();
 				}
 			});
-			menuOpciones.add(pruebaVaciarElementos);
+			//menuOpciones.add(pruebaVaciarElementos);
 			//Fin de JMenuBar
 			
 			//Creamos el panel de control que tendra una barra de scroll 
