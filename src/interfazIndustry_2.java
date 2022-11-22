@@ -1,9 +1,12 @@
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,15 +28,22 @@ import javax.swing.JToggleButton;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import java.time.format.DateTimeFormatter;  
+import java.time.LocalDateTime; 
 
 public class interfazIndustry_2 extends JFrame {
 	
@@ -102,9 +112,9 @@ public class interfazIndustry_2 extends JFrame {
 				}
 			});			
 			
-			menuOpciones.add(opcioArxiu);
 			
-			JMenuItem prueba = new JMenuItem("TEST");
+			
+			JMenuItem prueba = new JMenuItem("* TEST");
 			prueba.addActionListener(new ActionListener() {
 				
 				@Override
@@ -114,10 +124,10 @@ public class interfazIndustry_2 extends JFrame {
 					updateInterfaz(arrays);
 				}
 			});
-			//menuOpciones.add(prueba);
+			
 			
 			JMenuItem opcioVisualitzacions = new JMenuItem("Visualitzacions");
-			menuOpciones.add(opcioVisualitzacions);
+			
 			
 			JMenuItem opcioBloquearScroll=new JMenuItem("Bloquear barras Scroll");
 			opcioBloquearScroll.addActionListener(new ActionListener() {
@@ -134,15 +144,74 @@ public class interfazIndustry_2 extends JFrame {
 
 				}
 			});
-			//opcioVisualitzacions.add(opcioBloquearScroll);
-						
-			JMenuItem pruebaVaciarElementos=new JMenuItem("Vaciar Panel de Controles");
+			
+			JMenuItem pruebaVaciarElementos=new JMenuItem("* Vaciar Panel de Controles");
 			pruebaVaciarElementos.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					vaciarPanelControles();
 				}
 			});
-			//menuOpciones.add(pruebaVaciarElementos);
+			
+			JMenuItem leerControles=new JMenuItem("Leer controles");
+			leerControles.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					leerControles(modelo);
+				}
+			});
+			
+			JMenuItem cargarModelo=new JMenuItem("* Cargar Modelo sin abrir xml");
+			cargarModelo.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					vaciarPanelControles();
+					colocarElements(modelo);
+				}
+			});
+			
+			
+			JMenuItem verModelo=new JMenuItem("* Ver modelo en la terminal");
+			verModelo.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("\nNuestro actual modelo es: "+ modelo.toString());
+				}
+			});
+			
+			
+			JMenuItem snapshot=new JMenuItem("SNAPSHOT");
+			snapshot.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					//Se vienen cositas transformando la fecha a un formato para guardar en la BBDD
+					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+					LocalDateTime now = LocalDateTime.now();  
+					System.out.println(dtf.format(now));  
+					System.out.println("Modelo caturado: \n"+modelo.toString());
+				}
+			});
+			
+			
+			JMenuItem carregarSnapshot=new JMenuItem("carregar SNAPSHOT");
+			carregarSnapshot.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("Selecciona un snapshot: ");
+				}
+			});
+			
+			menuOpciones.add(opcioArxiu);
+			menuOpciones.add(opcioVisualitzacions);
+			//Opciones que aun no es claro que lo quieran asi
+			//Los de snapshot la descripción habla de botones
+			menuOpciones.add(new JSeparator());
+			menuOpciones.add(snapshot);
+			menuOpciones.add(carregarSnapshot);
+			menuOpciones.add(opcioBloquearScroll);
+			menuOpciones.add(leerControles);
+			//Opciones de prueba del codigo
+			menuOpciones.add(new JSeparator());
+			menuOpciones.add(prueba);
+			menuOpciones.add(pruebaVaciarElementos);
+			menuOpciones.add(cargarModelo);
+			menuOpciones.add(verModelo);
+			
+			
 			//Fin de JMenuBar
 			
 			//Creamos el panel de control que tendra una barra de scroll 
@@ -163,12 +232,24 @@ public class interfazIndustry_2 extends JFrame {
 			ArrayList<Block> listaBloques = modelo.getBlocks();
 			for(Block bloqueInsertar:listaBloques) {
 				JPanel panelBloque=new JPanel();
+				panelBloque.setBackground(Color.CYAN);
 				panelBloque.setPreferredSize(new Dimension(400,400));
+				panelBloque.setLayout(new BorderLayout());
+				
+				JPanel panelNombreBloq=new JPanel();
+				JPanel panelContrBloq=new JPanel();
+				
+				panelBloque.add(panelNombreBloq, BorderLayout.NORTH);
+				panelBloque.add(panelContrBloq, BorderLayout.CENTER);
 				
 				ArrayList<Switch> switches = bloqueInsertar.getSwitches();
 			    ArrayList<Dropdown> dropdowns = bloqueInsertar.getDropdowns();
 			    ArrayList<Slider> sliders = bloqueInsertar.getSliders();
 			    ArrayList<Sensor> sensors = bloqueInsertar.getSensors();
+			    
+			    JLabel nombreBloque=new JLabel(bloqueInsertar.getName());
+			    nombreBloque.setFont(new Font("Arial", 20, 20));
+			    panelNombreBloq.add(nombreBloque);
 			    
 			    //Primero coloca los switches
 			    for(Switch sw:switches) {
@@ -176,9 +257,22 @@ public class interfazIndustry_2 extends JFrame {
 			    	panelControl.setBackground(Color.LIGHT_GRAY);
 			    	String etiqueta=sw.getLabel();
 			    	
+			    	ChangeListener cListener=new ChangeListener() {
+						public void stateChanged(ChangeEvent e) {
+//							System.out.println(sw.isSelected());
+							if(sw.isSelected()) {
+								sw.setState("on");
+							}else {
+								sw.setState("off");
+							}
+						}
+					};
+					sw.addChangeListener(cListener);
+			    	
 			    	panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(sw);
-			    	panelBloque.add(panelControl);
+//			    	panelBloque.add(panelControl);
+			    	panelContrBloq.add(panelControl);
 			    }
 			    
 			    //Segundo coloca los sliders
@@ -187,9 +281,18 @@ public class interfazIndustry_2 extends JFrame {
 			    	panelControl.setBackground(Color.LIGHT_GRAY);
 			    	String etiqueta=sl.getLabel();
 			    	
+				    ChangeListener cListener=new ChangeListener() {
+						public void stateChanged(ChangeEvent e) {
+//							System.out.println("El valor de l'Slider es: "+sl.getValue());
+							sl.setState(sl.getValue());
+						}
+					};
+			    	sl.addChangeListener(cListener);
+			    	
 			    	panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(sl);
-			    	panelBloque.add(panelControl);
+//			    	panelBloque.add(panelControl);
+			    	panelContrBloq.add(panelControl);
 			    }
 			    
 			    //Tercero coloca los depslegables
@@ -198,9 +301,24 @@ public class interfazIndustry_2 extends JFrame {
 			    	panelControl.setBackground(Color.LIGHT_GRAY);
 			    	String etiqueta=dpd.getLabel();
 			    	
+			    	ItemListener itListener=new ItemListener() {
+						public void itemStateChanged(ItemEvent e) {
+							//Con el indice sabemos que opcion es la seleccionada, pero no estoy seguro de si estoy estableciendo lo correcto
+//							System.out.println(dpd.getSelectedIndex()); 
+//							System.out.println(dpd.getSelectedItem());
+							int indexSelected=dpd.getSelectedIndex();
+							Option optionSelected=dpd.getoptions().get(indexSelected);
+//							System.out.println("The selected option is "+optionSelected);
+							String newState= optionSelected.getValue();
+							dpd.setState(newState);
+						}
+					};
+					dpd.addItemListener(itListener);
+			    	
 					panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(dpd);
-			    	panelBloque.add(panelControl);
+//			    	panelBloque.add(panelControl);
+			    	panelContrBloq.add(panelControl);
 			    }
 			    
 			    //Cuarto y ultimo coloca los sensores
@@ -211,7 +329,8 @@ public class interfazIndustry_2 extends JFrame {
 			    	
 			    	panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(sn);
-			    	panelBloque.add(panelControl);
+//			    	panelBloque.add(panelControl);
+			    	panelContrBloq.add(panelControl);
 					
 			    }
 				panelControles.add(panelBloque);
@@ -228,7 +347,72 @@ public class interfazIndustry_2 extends JFrame {
 			panelControles.revalidate();
 		}
 		
+		public void leerControles(Modelo modelo) {
+			//Se le entra el modelo porque una vez completada, debe depositar los valores en este
+			
+			//Esta formula tiene el objetivo de encontrar los controles y leer su valor, usa varias veces .getComponents,
+			//que devuelve un array de Component[], estos componentes se tiene que hacer cast a lo que son, apra eso se usa siempre
+			//instanceoff para comprobar que se puede hacer, por ejemplo comprobar si un componente es un Slider antes de hacer cast 
+			//asi tendremos un elemento Slider con sus propiedades
+			
+			//Empieza obteniendo los componentes del panelControles, este tiene varios JPanel (fondo azul), cada uno es un bloque,
+			//asi que crea un objecto tipo Block, donde se añadiran los controles a medida que se vayan encontrando
+			//donde hay un JPanel por cada control (los paneles de fondo gris), de cada uno de estos controles
+			//tenemos que pillar el segundo componente [1] y hacer el cast, una vez hecho el cast lo podemos añadir al bloque y añadir el
+			//bloque al modelo
+	
+			modelo=new Modelo();
+			Component[] bloques= panelControles.getComponents();
+			for(Component c: bloques) {
+				if(c instanceof JPanel) {
+//					System.out.println("\nTenemos un bloque");
+					Block bloqueLeido=new Block("Nombre Bloque");
+					JPanel panelBloque=(JPanel) c;
+					Component[] controles=panelBloque.getComponents();
+					for(Component c1:controles) {
+//						System.out.println("\nEncontrado un control");
+						if(c1 instanceof JPanel) {
+							Component[] partesControl=((JPanel) c1).getComponents();
+							JLabel labelControl;
+							String textoEtiqueta;
+							Component control;
+							if(partesControl[0] instanceof JLabel) {
+								labelControl=(JLabel) partesControl[0];
+								textoEtiqueta=labelControl.getText();
+//								System.out.println("Encontrada la etiqueta :"+textoEtiqueta);
+							}
+							if(partesControl[1] instanceof Switch) {
+//								System.out.print("Encontrado: ");
+								Switch s=(Switch) partesControl[1];
+								System.out.println(s.toString());
+								bloqueLeido.addSwitch(s);
+							}else if(partesControl[1] instanceof Slider) {
+//								System.out.print("Encontrado: ");
+								Slider sl=(Slider) partesControl[1];
+								System.out.println(sl.toString());
+								bloqueLeido.addSlider(sl);
+							}else if(partesControl[1] instanceof Dropdown) {
+//								System.out.print("Encontrado: ");
+								Dropdown dp=(Dropdown) partesControl[1];
+								System.out.println(dp.toString());
+								bloqueLeido.addDropdown(dp);
+							}else if(partesControl[1] instanceof Sensor) {
+//								System.out.print("Encontrado: ");
+								Sensor sn=(Sensor) partesControl[1];
+								System.out.println(sn.toString());
+								bloqueLeido.addSensor(sn);
+							}
+						}
+					}
+//					System.out.println("El Bloque leido es: "+bloqueLeido.toString());
+					modelo.addBlock(bloqueLeido);
+//					System.out.println("Hemos añadido el bloque al modelo");
+				}
 				
+			}
+			System.out.println("El modelo de lo que se ha leido es: "+modelo.toString());
+		}
+		
 		//[[block1,2,slider,2],[block1,3,dropdown,1]]
 		
 		public static void updateInterfaz(String[] arrays) {
@@ -244,10 +428,8 @@ public class interfazIndustry_2 extends JFrame {
 							if (id.equals(String.valueOf(s.getId()))) {
 								if (value.equals("on")) {
 									s.setSelected(true);
-									s.setState("on");
 								} else {
 									s.setSelected(false);
-									s.setState("off");
 								}
 							}
 						}
@@ -257,7 +439,6 @@ public class interfazIndustry_2 extends JFrame {
 						for (Slider s : b.getSliders()) {
 							if (id.equals(String.valueOf(s.getId()))) {
 								s.setValue(Integer.parseInt(value));
-								s.setState(Integer.parseInt(value));
 							}
 						}
 						break;
@@ -266,7 +447,6 @@ public class interfazIndustry_2 extends JFrame {
 						for (Dropdown d : b.getDropdowns()) {
 							if (id.equals(String.valueOf(d.getId()))) {
 								d.setSelectedIndex(Integer.parseInt(value));
-								d.setState(value);
 							}
 						}
 						break;
