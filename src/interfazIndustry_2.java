@@ -227,77 +227,23 @@ public class interfazIndustry_2 extends JFrame {
 			int altoBloque=400;
 			ArrayList<Block> listaBloques = modelo.getBlocks();
 			for(Block bloqueInsertar:listaBloques) {
-				JPanel panelBloque=new JPanel();
-				panelBloque.setPreferredSize(new Dimension(anchoBloque,altoBloque));
-				panelBloque.setLayout(new BorderLayout());
-				
-				JPanel panelNombreBloq=new JPanel();
-				JPanel panelContrBloq=new JPanel();
-				
-				panelNombreBloq.setPreferredSize(new Dimension(anchoBloque,altoBloque/8));
-				
-				panelNombreBloq.setBorder(bordeGris1);
-				panelContrBloq.setBorder(bordeGris1);
-				
-				panelContrBloq.setLayout(new GridBagLayout());
-				GridBagConstraints gbc=new GridBagConstraints();
-				
-				panelBloque.add(panelNombreBloq, BorderLayout.NORTH);
-				panelBloque.add(panelContrBloq, BorderLayout.CENTER);
-				
-				JPanel panelSwitches=new JPanel();
-				JPanel panelDropdowns=new JPanel();
-				JPanel panelSliders=new JPanel();
-				JPanel panelSensors=new JPanel();
-				
-				gbc.gridx=0;
-				gbc.gridy=0;
-				gbc.gridwidth=1;
-				gbc.gridheight=1;
-				panelContrBloq.add(panelSwitches, gbc);
-				
-				gbc.gridx=1;
-				gbc.gridy=0;
-				gbc.gridwidth=2;
-				gbc.gridheight=1;
-				panelContrBloq.add(panelSliders, gbc);
-				
-				gbc.gridx=0;
-				gbc.gridy=1;
-				gbc.gridwidth=1;
-				gbc.gridheight=1;
-				panelContrBloq.add(panelDropdowns, gbc);
-				
-				gbc.gridx=1;
-				gbc.gridy=1;
-				gbc.gridwidth=1;
-				gbc.gridheight=1;
-				panelContrBloq.add(panelSensors, gbc);
-				panelContrBloq.setBackground(Color.LIGHT_GRAY);
-				
-				panelSwitches.setBackground(Color.CYAN);
-				panelDropdowns.setBackground(Color.CYAN);
-				panelSliders.setBackground(Color.CYAN);
-				panelSensors.setBackground(Color.CYAN);
+				bloqueGridBagLayout panelBloque=new bloqueGridBagLayout();
 				
 				ArrayList<Switch> switches = bloqueInsertar.getSwitches();
 			    ArrayList<Dropdown> dropdowns = bloqueInsertar.getDropdowns();
 			    ArrayList<Slider> sliders = bloqueInsertar.getSliders();
 			    ArrayList<Sensor> sensors = bloqueInsertar.getSensors();
-			    
-			    JLabel nombreBloque=new JLabel(bloqueInsertar.getName());
-			    nombreBloque.setFont(new Font("Arial", 20, 20));
-			    panelNombreBloq.add(nombreBloque);
+
+			    panelBloque.enterBlockName(bloqueInsertar.getName());
 			    
 			    //Primero coloca los switches
 			    for(Switch sw:switches) {
 			    	JPanel panelControl=new JPanel();
-			    	panelControl.setBackground(Color.LIGHT_GRAY);
+			    	panelControl.setBackground(Color.CYAN);
 			    	String etiqueta=sw.getLabel();
 			    	
 			    	ChangeListener cListener=new ChangeListener() {
 						public void stateChanged(ChangeEvent e) {
-//							System.out.println(sw.isSelected());
 							if(sw.isSelected()) {
 								sw.setState("on");
 							}else {
@@ -309,18 +255,17 @@ public class interfazIndustry_2 extends JFrame {
 			    	
 			    	panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(sw);
-			    	panelSwitches.add(panelControl);
+			    	panelBloque.addSwitch(panelControl);
 			    }
 			    
 			    //Segundo coloca los sliders
 			    for(Slider sl:sliders) {
 			    	JPanel panelControl=new JPanel();
-			    	panelControl.setBackground(Color.LIGHT_GRAY);
+			    	panelControl.setBackground(Color.CYAN);
 			    	String etiqueta=sl.getLabel();
 			    	
 				    ChangeListener cListener=new ChangeListener() {
 						public void stateChanged(ChangeEvent e) {
-//							System.out.println("El valor de l'Slider es: "+sl.getValue());
 							sl.setState(sl.getValue());
 						}
 					};
@@ -330,13 +275,13 @@ public class interfazIndustry_2 extends JFrame {
 			    	panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(sl);
 			    	sl.setPreferredSize(new Dimension(anchoBloque/3, 20));
-			    	panelSliders.add(panelControl);
+			    	panelBloque.addSlider(panelControl);
 			    }
 			    
-			    //Tercero coloca los depslegables
+			    //Tercero coloca los desplegables
 			    for(Dropdown dpd: dropdowns) {
 			    	JPanel panelControl=new JPanel();
-			    	panelControl.setBackground(Color.LIGHT_GRAY);
+			    	panelControl.setBackground(Color.CYAN);
 			    	String etiqueta=dpd.getLabel();
 			    	
 			    	ItemListener itListener=new ItemListener() {
@@ -355,18 +300,18 @@ public class interfazIndustry_2 extends JFrame {
 			    	
 					panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(dpd);
-			    	panelDropdowns.add(panelControl);
+			    	panelBloque.addDropdown(panelControl);
 			    }
 			    
 			    //Cuarto y ultimo coloca los sensores
 			    for(Sensor sn:sensors) {
 			    	JPanel panelControl=new JPanel();
-			    	panelControl.setBackground(Color.LIGHT_GRAY);
+			    	panelControl.setBackground(Color.CYAN);
 			    	String etiqueta=sn.getLabel();
 			    	
 			    	panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(sn);
-			    	panelSensors.add(panelControl);
+			    	panelBloque.addSensor(panelControl);
 					
 			    }
 				panelControles.add(panelBloque);

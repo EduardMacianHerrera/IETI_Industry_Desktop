@@ -1,4 +1,4 @@
-package pruebas;
+
 
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -78,6 +78,7 @@ public class bloqueGridBagLayout extends JPanel {
 		panelNombreBloque.add(habilitarBarrasScroll);
 		
 		JPanel panelControles = new JPanel();
+		panelControles.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelControles.setBackground(new Color(192, 192, 192));
 		add(panelControles, BorderLayout.CENTER);
 		GridBagLayout gbl_panelControles = new GridBagLayout();
@@ -97,6 +98,8 @@ public class bloqueGridBagLayout extends JPanel {
 		panelControles.add(scrollSwitches, gbc_scrollSwitches);
 		
 		panelSwitches = new JPanel();
+		panelSwitches.setAlignmentY(50.0f);
+		panelSwitches.setAlignmentX(50.0f);
 		panelSwitches.setBackground(new Color(64, 128, 128));
 		scrollSwitches.setViewportView(panelSwitches);
 		panelSwitches.setLayout(new BoxLayout(panelSwitches, BoxLayout.Y_AXIS));
@@ -160,18 +163,22 @@ public class bloqueGridBagLayout extends JPanel {
 	}
 	
 	public void addSwitch(JPanel control) {
+		panelSwitches.add(Box.createRigidArea(new Dimension(10, 10)));
 		panelSwitches.add(control);
 	}
 	
 	public void addSlider(JPanel control) {
+		panelSwitches.add(Box.createRigidArea(new Dimension(10, 10)));
 		panelSliders.add(control);
 	}
 	
 	public void addDropdown(JPanel control) {
+		panelSwitches.add(Box.createRigidArea(new Dimension(10, 10)));
 		panelDropdowns.add(control);
 	}
 	
 	public void addSensor(JPanel control) {
+		panelSwitches.add(Box.createRigidArea(new Dimension(10, 10)));
 		panelSensors.add(control);
 	}
 	
