@@ -2,6 +2,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -70,7 +72,7 @@ public class interfazIndustry_2 extends JFrame {
 			this.modelo = modelo;
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			
-			bordeGris1=BorderFactory.createLineBorder(Color.LIGHT_GRAY, 3);
+			bordeGris1=BorderFactory.createLineBorder(Color.GRAY, 3);
 			bordeVacio1=new EmptyBorder(5, 5, 5, 5);
 			
 			setBounds(100, 100, 600, 400);
@@ -152,12 +154,6 @@ public class interfazIndustry_2 extends JFrame {
 				}
 			});
 			
-			JMenuItem leerControles=new JMenuItem("Leer controles");
-			leerControles.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					leerControles(modelo);
-				}
-			});
 			
 			JMenuItem cargarModelo=new JMenuItem("* Cargar Modelo sin abrir xml");
 			cargarModelo.addActionListener(new ActionListener() {
@@ -203,7 +199,6 @@ public class interfazIndustry_2 extends JFrame {
 			menuOpciones.add(snapshot);
 			menuOpciones.add(carregarSnapshot);
 			menuOpciones.add(opcioBloquearScroll);
-			menuOpciones.add(leerControles);
 			//Opciones de prueba del codigo
 			menuOpciones.add(new JSeparator());
 			menuOpciones.add(prueba);
@@ -229,37 +224,27 @@ public class interfazIndustry_2 extends JFrame {
 		
 		//Metodo para colocar los elementos
 		public void colocarElements(Modelo modelo) {
+			int anchoEspecificado=400;
+			int altoEspecificado=400;
 			ArrayList<Block> listaBloques = modelo.getBlocks();
 			for(Block bloqueInsertar:listaBloques) {
-				JPanel panelBloque=new JPanel();
-				panelBloque.setBackground(Color.CYAN);
-				panelBloque.setPreferredSize(new Dimension(400,400));
-				panelBloque.setLayout(new BorderLayout());
-				
-				JPanel panelNombreBloq=new JPanel();
-				JPanel panelContrBloq=new JPanel();
-				
-				panelBloque.add(panelNombreBloq, BorderLayout.NORTH);
-				panelBloque.add(panelContrBloq, BorderLayout.CENTER);
+				bloqueGridBagLayout panelBloque=new bloqueGridBagLayout();
 				
 				ArrayList<Switch> switches = bloqueInsertar.getSwitches();
 			    ArrayList<Dropdown> dropdowns = bloqueInsertar.getDropdowns();
 			    ArrayList<Slider> sliders = bloqueInsertar.getSliders();
 			    ArrayList<Sensor> sensors = bloqueInsertar.getSensors();
-			    
-			    JLabel nombreBloque=new JLabel(bloqueInsertar.getName());
-			    nombreBloque.setFont(new Font("Arial", 20, 20));
-			    panelNombreBloq.add(nombreBloque);
+
+			    panelBloque.enterBlockName(bloqueInsertar.getName());
 			    
 			    //Primero coloca los switches
 			    for(Switch sw:switches) {
 			    	JPanel panelControl=new JPanel();
-			    	panelControl.setBackground(Color.LIGHT_GRAY);
+			    	panelControl.setBackground(Color.CYAN);
 			    	String etiqueta=sw.getLabel();
 			    	
 			    	ChangeListener cListener=new ChangeListener() {
 						public void stateChanged(ChangeEvent e) {
-//							System.out.println(sw.isSelected());
 							if(sw.isSelected()) {
 								sw.setState("on");
 							}else {
@@ -268,37 +253,36 @@ public class interfazIndustry_2 extends JFrame {
 						}
 					};
 					sw.addChangeListener(cListener);
-			    	
+					
 			    	panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(sw);
-//			    	panelBloque.add(panelControl);
-			    	panelContrBloq.add(panelControl);
+			    	panelBloque.addSwitch(panelControl);
 			    }
 			    
 			    //Segundo coloca los sliders
 			    for(Slider sl:sliders) {
 			    	JPanel panelControl=new JPanel();
-			    	panelControl.setBackground(Color.LIGHT_GRAY);
+			    	panelControl.setBackground(Color.CYAN);
 			    	String etiqueta=sl.getLabel();
 			    	
 				    ChangeListener cListener=new ChangeListener() {
 						public void stateChanged(ChangeEvent e) {
-//							System.out.println("El valor de l'Slider es: "+sl.getValue());
 							sl.setState(sl.getValue());
 						}
 					};
 			    	sl.addChangeListener(cListener);
 			    	
+			    	int anchoB=panelBloque.getAncho();
+			    	sl.setPreferredSize(new Dimension(anchoB/3, 20));
 			    	panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(sl);
-//			    	panelBloque.add(panelControl);
-			    	panelContrBloq.add(panelControl);
+			    	panelBloque.addSlider(panelControl);
 			    }
 			    
-			    //Tercero coloca los depslegables
+			    //Tercero coloca los desplegables
 			    for(Dropdown dpd: dropdowns) {
 			    	JPanel panelControl=new JPanel();
-			    	panelControl.setBackground(Color.LIGHT_GRAY);
+			    	panelControl.setBackground(Color.CYAN);
 			    	String etiqueta=dpd.getLabel();
 			    	
 			    	ItemListener itListener=new ItemListener() {
@@ -314,23 +298,21 @@ public class interfazIndustry_2 extends JFrame {
 						}
 					};
 					dpd.addItemListener(itListener);
-			    	
+					
 					panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(dpd);
-//			    	panelBloque.add(panelControl);
-			    	panelContrBloq.add(panelControl);
+			    	panelBloque.addDropdown(panelControl);
 			    }
 			    
 			    //Cuarto y ultimo coloca los sensores
 			    for(Sensor sn:sensors) {
 			    	JPanel panelControl=new JPanel();
-			    	panelControl.setBackground(Color.LIGHT_GRAY);
+			    	panelControl.setBackground(Color.CYAN);
 			    	String etiqueta=sn.getLabel();
 			    	
 			    	panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(sn);
-//			    	panelBloque.add(panelControl);
-			    	panelContrBloq.add(panelControl);
+			    	panelBloque.addSensor(panelControl);
 					
 			    }
 				panelControles.add(panelBloque);
@@ -345,72 +327,6 @@ public class interfazIndustry_2 extends JFrame {
 			panelControles.removeAll();
 			panelControles.repaint();
 			panelControles.revalidate();
-		}
-		
-		public void leerControles(Modelo modelo) {
-			//Se le entra el modelo porque una vez completada, debe depositar los valores en este
-			
-			//Esta formula tiene el objetivo de encontrar los controles y leer su valor, usa varias veces .getComponents,
-			//que devuelve un array de Component[], estos componentes se tiene que hacer cast a lo que son, apra eso se usa siempre
-			//instanceoff para comprobar que se puede hacer, por ejemplo comprobar si un componente es un Slider antes de hacer cast 
-			//asi tendremos un elemento Slider con sus propiedades
-			
-			//Empieza obteniendo los componentes del panelControles, este tiene varios JPanel (fondo azul), cada uno es un bloque,
-			//asi que crea un objecto tipo Block, donde se añadiran los controles a medida que se vayan encontrando
-			//donde hay un JPanel por cada control (los paneles de fondo gris), de cada uno de estos controles
-			//tenemos que pillar el segundo componente [1] y hacer el cast, una vez hecho el cast lo podemos añadir al bloque y añadir el
-			//bloque al modelo
-	
-			modelo=new Modelo();
-			Component[] bloques= panelControles.getComponents();
-			for(Component c: bloques) {
-				if(c instanceof JPanel) {
-//					System.out.println("\nTenemos un bloque");
-					Block bloqueLeido=new Block("Nombre Bloque");
-					JPanel panelBloque=(JPanel) c;
-					Component[] controles=panelBloque.getComponents();
-					for(Component c1:controles) {
-//						System.out.println("\nEncontrado un control");
-						if(c1 instanceof JPanel) {
-							Component[] partesControl=((JPanel) c1).getComponents();
-							JLabel labelControl;
-							String textoEtiqueta;
-							Component control;
-							if(partesControl[0] instanceof JLabel) {
-								labelControl=(JLabel) partesControl[0];
-								textoEtiqueta=labelControl.getText();
-//								System.out.println("Encontrada la etiqueta :"+textoEtiqueta);
-							}
-							if(partesControl[1] instanceof Switch) {
-//								System.out.print("Encontrado: ");
-								Switch s=(Switch) partesControl[1];
-								System.out.println(s.toString());
-								bloqueLeido.addSwitch(s);
-							}else if(partesControl[1] instanceof Slider) {
-//								System.out.print("Encontrado: ");
-								Slider sl=(Slider) partesControl[1];
-								System.out.println(sl.toString());
-								bloqueLeido.addSlider(sl);
-							}else if(partesControl[1] instanceof Dropdown) {
-//								System.out.print("Encontrado: ");
-								Dropdown dp=(Dropdown) partesControl[1];
-								System.out.println(dp.toString());
-								bloqueLeido.addDropdown(dp);
-							}else if(partesControl[1] instanceof Sensor) {
-//								System.out.print("Encontrado: ");
-								Sensor sn=(Sensor) partesControl[1];
-								System.out.println(sn.toString());
-								bloqueLeido.addSensor(sn);
-							}
-						}
-					}
-//					System.out.println("El Bloque leido es: "+bloqueLeido.toString());
-					modelo.addBlock(bloqueLeido);
-//					System.out.println("Hemos añadido el bloque al modelo");
-				}
-				
-			}
-			System.out.println("El modelo de lo que se ha leido es: "+modelo.toString());
 		}
 		
 		//[[block1,2,slider,2],[block1,3,dropdown,1]]

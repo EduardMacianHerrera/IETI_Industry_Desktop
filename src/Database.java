@@ -23,6 +23,7 @@ public class Database {
         if (!fDatabase.exists()) {
             initDatabase();
         }
+        initDatabase();
 
     }
 
