@@ -11,10 +11,14 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -191,6 +195,16 @@ public class interfazIndustry_2 extends JFrame {
 			carregarSnapshot.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					System.out.println("Selecciona un snapshot: ");
+					HashMap<Integer, String> snapshotsMap = Database.listSnapshots();
+                    for (Map.Entry<Integer, String> snapshot : snapshotsMap.entrySet()) {
+                        System.out.println("Id: "+snapshot.getKey()+", Name: "+snapshot.getValue());
+                    }
+                    Scanner scanner = new Scanner(System.in);
+                    System.out.println("Escoge:");
+                    Database.loadSnapshot(String.valueOf(scanner.nextInt()));
+                    vaciarPanelControles();
+					colocarElements(modelo);
+				
 				}
 			});
 			
@@ -256,7 +270,9 @@ public class interfazIndustry_2 extends JFrame {
 						}
 					};
 					sw.addChangeListener(cListener);
-					
+					if (sw.getState().equals("on")) {
+						sw.setSelected(true);
+					}
 			    	panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(sw);
 			    	panelBloque.addSwitch(panelControl);
@@ -274,6 +290,12 @@ public class interfazIndustry_2 extends JFrame {
 						}
 					};
 			    	sl.addChangeListener(cListener);
+			    	sl.setValue(sl.getState());
+					sl.setMinimum(sl.getMin());
+					sl.setMaximum(sl.getMax());
+					sl.setSnapToTicks(true);
+					sl.setMinorTickSpacing(sl.getStep());
+			    	
 			    	
 			    	int anchoB=panelBloque.getAncho();
 			    	sl.setPreferredSize(new Dimension(anchoB/3, 20));
@@ -302,6 +324,22 @@ public class interfazIndustry_2 extends JFrame {
 						}
 					};
 					dpd.addItemListener(itListener);
+					ArrayList<String> labels = new ArrayList<String>();
+					for (Option option : dpd.getoptions()) {
+						labels.add(option.getLabel());
+					}
+					
+					DefaultComboBoxModel modeloComboBox = new DefaultComboBoxModel(labels.toArray());
+					dpd.setModel(modeloComboBox);
+					
+					int index = 0;
+					for (int i = 0; i < dpd.getoptions().size(); i++) {
+						String value = dpd.getoptions().get(i).getValue();
+						if (value.equals(dpd.getState())) {
+							index = i;
+						}
+					}
+					dpd.setSelectedIndex(index);
 					
 					panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(dpd);

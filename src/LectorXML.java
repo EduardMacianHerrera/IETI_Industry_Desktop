@@ -110,9 +110,7 @@ public class LectorXML {
 			throw new SyntaxException("Error de formato en un switch");
 		}
 		Switch s = new Switch(state, id, label);
-		if (state.equals("on")) {
-			s.setSelected(true);
-		}
+		
 		block.addSwitch(s);
 	}
 
@@ -139,11 +137,7 @@ public class LectorXML {
 		}
 
 		Slider s = new Slider(id, label, state, min, max, step);
-		s.setValue(state);
-		s.setMinimum(min);
-		s.setMaximum(max);
-		s.setSnapToTicks(true);
-		s.setMinorTickSpacing(step);
+		
 
 		block.addSlider(s);
 	}
@@ -184,17 +178,9 @@ public class LectorXML {
 			}
 		}
 		
-		DefaultComboBoxModel modeloComboBox = new DefaultComboBoxModel(labels.toArray());
-		d.setModel(modeloComboBox);
 		
-		int index = 0;
-		for (int i = 0; i < d.getoptions().size(); i++) {
-			String value = d.getoptions().get(i).getValue();
-			if (value.equals(state)) {
-				index = i;
-			}
-		}
-		d.setSelectedIndex(index);
+		
+		
 		block.addDropdown(d);
 	}
 

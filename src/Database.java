@@ -177,4 +177,48 @@ public class Database {
     	
     	UtilsSQLite.queryUpdate(conn, "insert into snapshots(name,date,controls) values ('"+name+"','"+dtf.format(now)+"','"+controls+"');");
     }
+    
+    public static HashMap<Integer, String> listSnapshots() {
+    	Connection conn = UtilsSQLite.connect(filePath);
+    	HashMap<Integer, String> snapshotsMap = new HashMap<Integer, String>();
+    	
+    	ResultSet rs = UtilsSQLite.querySelect(conn, "select id,name from snapshots;");
+    	try {
+			while (rs.next()) {
+				snapshotsMap.put(rs.getInt(1), rs.getString(2));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return snapshotsMap;
+    }
+    
+    public static boolean loadSnapshot(String id) {
+    	Connection conn = UtilsSQLite.connect(filePath);
+    	
+    	ResultSet rs = UtilsSQLite.querySelect(conn, "select controls from snapshots where id = "+id+";");
+    	
+    	String modelo = "";
+    	try {
+			while (rs.next()) {
+				modelo = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	
+    	if (!modelo.equals("")) {
+    		Modelo.blocks.clear();
+    		Modelo.loadModel(modelo);
+    		return true;
+		} else {
+			System.out.println("El modelo no se ha podido cargar correctamente");
+			return false;
+		}
+    }
+    
+    
 }

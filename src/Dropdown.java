@@ -14,6 +14,16 @@ public class Dropdown extends JComboBox {
         this.id = id;
         this.state = state;
     }
+    
+    public Dropdown(String label, int id, String state, ArrayList<Option> options) {
+    	super();
+        this.label = label;
+        this.id = id;
+        this.state = state;
+        for (Option option : options) {
+			addOption(option);
+		}
+    }
 
     public String getLabel() {
         return label;
