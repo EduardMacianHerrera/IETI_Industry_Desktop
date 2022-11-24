@@ -160,5 +160,10 @@ public class WsServidor extends WebSocketServer {
         } catch (IOException e) { e.printStackTrace(); }
         return result;
     }
+    
+    public static void closeConnection() {
+    	Modelo.blocks.clear();
+    	socket.closeConnection();
+    }
      
 }
