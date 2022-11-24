@@ -65,7 +65,7 @@ public class interfazIndustry_2 extends JFrame {
 		private static String directoriTreball=System.getProperty("user.dir");
 		private JPanel contentPane;
 		private JScrollPane panelScroll;
-		private JPanel panelControles;
+		private static JPanel panelControles;
 		private Border bordeGris1;
 		private Border bordeVacio1;
 		private static Modelo modelo;
@@ -180,10 +180,10 @@ public class interfazIndustry_2 extends JFrame {
 			snapshot.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					//Se vienen cositas transformando la fecha a un formato para guardar en la BBDD
-					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-					LocalDateTime now = LocalDateTime.now();  
-					System.out.println(dtf.format(now));  
-					System.out.println("Modelo caturado: \n"+modelo.toString());
+//					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+//					LocalDateTime now = LocalDateTime.now();  
+//					System.out.println(dtf.format(now));  
+//					System.out.println("Modelo caturado: \n"+modelo.toString());
 					String nombreSnapshot= JOptionPane.showInputDialog("Introduzca un nombre para el Snapshot", 0);
 					System.out.println("El snapshot se guardara como "+nombreSnapshot);
 					Database.saveSnapshot(nombreSnapshot, modelo.toString());
@@ -194,17 +194,20 @@ public class interfazIndustry_2 extends JFrame {
 			JMenuItem carregarSnapshot=new JMenuItem("carregar SNAPSHOT");
 			carregarSnapshot.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					System.out.println("Selecciona un snapshot: ");
-					HashMap<Integer, String> snapshotsMap = Database.listSnapshots();
-                    for (Map.Entry<Integer, String> snapshot : snapshotsMap.entrySet()) {
-                        System.out.println("Id: "+snapshot.getKey()+", Name: "+snapshot.getValue());
-                    }
-                    Scanner scanner = new Scanner(System.in);
-                    System.out.println("Escoge:");
-                    Database.loadSnapshot(String.valueOf(scanner.nextInt()));
-                    vaciarPanelControles();
-					colocarElements(modelo);
-				
+//					System.out.println("Selecciona un snapshot: ");
+//					HashMap<Integer, String> snapshotsMap = Database.listSnapshots();
+//                    for (Map.Entry<Integer, String> snapshot : snapshotsMap.entrySet()) {
+//                        System.out.println("Id: "+snapshot.getKey()+", Name: "+snapshot.getValue());
+//                    }
+//                    Scanner scanner = new Scanner(System.in);
+//                    System.out.println("Escoge:");
+					frameSnapshots marcoSnapshots=new frameSnapshots();
+					marcoSnapshots.setVisible(true);
+                    
+					dispose();
+//                    vaciarPanelControles();
+//					colocarElements(modelo);
+					
 				}
 			});
 			
@@ -240,7 +243,7 @@ public class interfazIndustry_2 extends JFrame {
 		}
 		
 		//Metodo para colocar los elementos
-		public void colocarElements(Modelo modelo) {
+		public static void colocarElements(Modelo modelo) {
 			int anchoEspecificado=400;
 			int altoEspecificado=400;
 			ArrayList<Block> listaBloques = modelo.getBlocks();
