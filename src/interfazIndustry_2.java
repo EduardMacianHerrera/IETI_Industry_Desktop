@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -223,8 +224,8 @@ public class interfazIndustry_2 extends JFrame {
 		
 		//Metodo para colocar los elementos
 		public void colocarElements(Modelo modelo) {
-			int anchoBloque=400;
-			int altoBloque=400;
+			int anchoEspecificado=400;
+			int altoEspecificado=400;
 			ArrayList<Block> listaBloques = modelo.getBlocks();
 			for(Block bloqueInsertar:listaBloques) {
 				bloqueGridBagLayout panelBloque=new bloqueGridBagLayout();
@@ -252,7 +253,7 @@ public class interfazIndustry_2 extends JFrame {
 						}
 					};
 					sw.addChangeListener(cListener);
-			    	
+					
 			    	panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(sw);
 			    	panelBloque.addSwitch(panelControl);
@@ -271,10 +272,10 @@ public class interfazIndustry_2 extends JFrame {
 					};
 			    	sl.addChangeListener(cListener);
 			    	
-			    	
+			    	int anchoB=panelBloque.getAncho();
+			    	sl.setPreferredSize(new Dimension(anchoB/3, 20));
 			    	panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(sl);
-			    	sl.setPreferredSize(new Dimension(anchoBloque/3, 20));
 			    	panelBloque.addSlider(panelControl);
 			    }
 			    
@@ -297,7 +298,7 @@ public class interfazIndustry_2 extends JFrame {
 						}
 					};
 					dpd.addItemListener(itListener);
-			    	
+					
 					panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(dpd);
 			    	panelBloque.addDropdown(panelControl);

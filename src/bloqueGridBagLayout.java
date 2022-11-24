@@ -25,6 +25,8 @@ import javax.swing.ScrollPaneConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Rectangle;
+import javax.swing.SpringLayout;
+import java.awt.GridLayout;
 
 public class bloqueGridBagLayout extends JPanel {
 	private JScrollPane scrollSwitches;
@@ -40,6 +42,8 @@ public class bloqueGridBagLayout extends JPanel {
 	
 	private Border bordeGris1;
 	private boolean scrollHabilitado=true;
+	private int ancho;
+	private int alto;
 	
 	
 
@@ -48,7 +52,9 @@ public class bloqueGridBagLayout extends JPanel {
 	 */
 	public bloqueGridBagLayout() {
 		bordeGris1=BorderFactory.createLineBorder(Color.LIGHT_GRAY, 3);
-		setPreferredSize(new Dimension(400,300));
+		ancho=400;
+		alto=300;
+		setPreferredSize(new Dimension(ancho,alto));
 		
 		//Inicio codigo hecho con WB
 		setLayout(new BorderLayout(0, 0));
@@ -59,7 +65,7 @@ public class bloqueGridBagLayout extends JPanel {
 		panelNombreBloque.setLayout(new BoxLayout(panelNombreBloque, BoxLayout.Y_AXIS));
 		
 		nombreBloque = new JLabel("NOMBRE BLOQUE");
-		nombreBloque.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		nombreBloque.setFont(new Font("Dialog", Font.PLAIN, 18));
 		nombreBloque.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panelNombreBloque.add(nombreBloque);
 		
@@ -73,7 +79,7 @@ public class bloqueGridBagLayout extends JPanel {
 				}
 			}
 		});
-		habilitarBarrasScroll.setFont(new Font("Tahoma", Font.PLAIN, 8));
+		habilitarBarrasScroll.setFont(new Font("Dialog", Font.PLAIN, 6));
 		habilitarBarrasScroll.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panelNombreBloque.add(habilitarBarrasScroll);
 		
@@ -150,12 +156,21 @@ public class bloqueGridBagLayout extends JPanel {
 		panelNombreBloque.setBorder(bordeGris1);
 		panelNombreBloque.add(Box.createRigidArea(new Dimension(5, 5)));
 		nombreBloque.setBorder(new EmptyBorder(5, 5, 5, 5));
-		
 	}
 	
-	public bloqueGridBagLayout(int ancho, int alto) {
+	public bloqueGridBagLayout(int anchoEsp, int altoEsp) {
 		this();
-		setPreferredSize(new Dimension(ancho, alto));
+		this.ancho=anchoEsp;
+		this.alto=altoEsp;
+		setPreferredSize(new Dimension(anchoEsp, altoEsp));
+	}
+	
+	public int getAlto() {
+		return this.alto;
+	}
+	
+	public int getAncho() {
+		return this.ancho;
 	}
 	
 	public void enterBlockName(String nombreLeido) {
@@ -164,21 +179,25 @@ public class bloqueGridBagLayout extends JPanel {
 	
 	public void addSwitch(JPanel control) {
 		panelSwitches.add(Box.createRigidArea(new Dimension(10, 10)));
+		control.setMaximumSize(new Dimension(ancho/4, 50));
 		panelSwitches.add(control);
 	}
 	
 	public void addSlider(JPanel control) {
-		panelSwitches.add(Box.createRigidArea(new Dimension(10, 10)));
+		panelSliders.add(Box.createRigidArea(new Dimension(10, 10)));
+		control.setMaximumSize(new Dimension(ancho/2, 50));
 		panelSliders.add(control);
 	}
 	
 	public void addDropdown(JPanel control) {
-		panelSwitches.add(Box.createRigidArea(new Dimension(10, 10)));
+		panelDropdowns.add(Box.createRigidArea(new Dimension(10, 10)));
+		control.setMaximumSize(new Dimension(ancho/3, 60));
 		panelDropdowns.add(control);
 	}
 	
 	public void addSensor(JPanel control) {
-		panelSwitches.add(Box.createRigidArea(new Dimension(10, 10)));
+		panelSensors.add(Box.createRigidArea(new Dimension(10, 10)));
+		control.setMaximumSize(new Dimension(ancho/3, 50));
 		panelSensors.add(control);
 	}
 	
