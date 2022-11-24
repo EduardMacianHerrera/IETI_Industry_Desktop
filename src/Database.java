@@ -3,6 +3,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -59,6 +61,14 @@ public class Database {
                 + "	id integer PRIMARY KEY AUTOINCREMENT,"
                 + "	username text NOT NULL,"
                 + " password text NOT NULL);");
+        
+        UtilsSQLite.queryUpdate(conn, "CREATE TABLE if not exists \"snapshots\" (\r\n"
+        		+ "	\"id\"	INTEGER NOT NULL,\r\n"
+        		+ "	\"name\"	TEXT NOT NULL,\r\n"
+        		+ "	\"date\"	TEXT NOT NULL,\r\n"
+        		+ "	\"controls\"	TEXT NOT NULL,\r\n"
+        		+ "	PRIMARY KEY(\"id\" AUTOINCREMENT)\r\n"
+        		+ ");");
         
         UtilsSQLite.queryUpdate(connSalt, "DROP TABLE IF EXISTS salt;");
         UtilsSQLite.queryUpdate(connSalt, "CREATE TABLE IF NOT EXISTS salt("
@@ -158,5 +168,13 @@ public class Database {
 		} else {
 			return "false";
 		}
+    }
+    
+    public static void saveSnapshot(String name, String controls) {
+    	Connection conn = UtilsSQLite.connect(filePath);
+    	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+		LocalDateTime now = LocalDateTime.now();  
+    	
+    	UtilsSQLite.queryUpdate(conn, "insert into snapshots(name,date,controls) values ('"+name+"','"+dtf.format(now)+"','"+controls+"');");
     }
 }
