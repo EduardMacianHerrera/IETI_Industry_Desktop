@@ -180,6 +180,9 @@ public class interfazIndustry_2 extends JFrame {
 					LocalDateTime now = LocalDateTime.now();  
 					System.out.println(dtf.format(now));  
 					System.out.println("Modelo caturado: \n"+modelo.toString());
+					String nombreSnapshot= JOptionPane.showInputDialog("Introduzca un nombre para el Snapshot", 0);
+					System.out.println("El snapshot se guardara como "+nombreSnapshot);
+					Database.saveSnapshot(nombreSnapshot, modelo.toString());
 				}
 			});
 			
@@ -240,7 +243,7 @@ public class interfazIndustry_2 extends JFrame {
 			    //Primero coloca los switches
 			    for(Switch sw:switches) {
 			    	JPanel panelControl=new JPanel();
-			    	panelControl.setBackground(Color.CYAN);
+			    	panelControl.setOpaque(false);
 			    	String etiqueta=sw.getLabel();
 			    	
 			    	ChangeListener cListener=new ChangeListener() {
@@ -262,7 +265,7 @@ public class interfazIndustry_2 extends JFrame {
 			    //Segundo coloca los sliders
 			    for(Slider sl:sliders) {
 			    	JPanel panelControl=new JPanel();
-			    	panelControl.setBackground(Color.CYAN);
+			    	panelControl.setOpaque(false);
 			    	String etiqueta=sl.getLabel();
 			    	
 				    ChangeListener cListener=new ChangeListener() {
@@ -276,13 +279,14 @@ public class interfazIndustry_2 extends JFrame {
 			    	sl.setPreferredSize(new Dimension(anchoB/3, 20));
 			    	panelControl.add(new JLabel(etiqueta));
 			    	panelControl.add(sl);
+			    	sl.setOpaque(false);
 			    	panelBloque.addSlider(panelControl);
 			    }
 			    
 			    //Tercero coloca los desplegables
 			    for(Dropdown dpd: dropdowns) {
 			    	JPanel panelControl=new JPanel();
-			    	panelControl.setBackground(Color.CYAN);
+			    	panelControl.setOpaque(false);
 			    	String etiqueta=dpd.getLabel();
 			    	
 			    	ItemListener itListener=new ItemListener() {
@@ -307,7 +311,7 @@ public class interfazIndustry_2 extends JFrame {
 			    //Cuarto y ultimo coloca los sensores
 			    for(Sensor sn:sensors) {
 			    	JPanel panelControl=new JPanel();
-			    	panelControl.setBackground(Color.CYAN);
+			    	panelControl.setOpaque(false);
 			    	String etiqueta=sn.getLabel();
 			    	
 			    	panelControl.add(new JLabel(etiqueta));

@@ -60,7 +60,7 @@ public class bloqueGridBagLayout extends JPanel {
 		setLayout(new BorderLayout(0, 0));
 		
 		panelNombreBloque = new JPanel();
-		panelNombreBloque.setBackground(new Color(128, 128, 128));
+		panelNombreBloque.setBackground(new Color(255, 255, 255));
 		add(panelNombreBloque, BorderLayout.NORTH);
 		panelNombreBloque.setLayout(new BoxLayout(panelNombreBloque, BoxLayout.Y_AXIS));
 		
@@ -69,7 +69,7 @@ public class bloqueGridBagLayout extends JPanel {
 		nombreBloque.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panelNombreBloque.add(nombreBloque);
 		
-		JButton habilitarBarrasScroll = new JButton("Habilitar Scroll");
+		JButton habilitarBarrasScroll = new JButton("Scroll Bloque");
 		habilitarBarrasScroll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(scrollHabilitado) {
@@ -106,7 +106,7 @@ public class bloqueGridBagLayout extends JPanel {
 		panelSwitches = new JPanel();
 		panelSwitches.setAlignmentY(50.0f);
 		panelSwitches.setAlignmentX(50.0f);
-		panelSwitches.setBackground(new Color(64, 128, 128));
+		panelSwitches.setBackground(new Color(255, 255, 255));
 		scrollSwitches.setViewportView(panelSwitches);
 		panelSwitches.setLayout(new BoxLayout(panelSwitches, BoxLayout.Y_AXIS));
 		
@@ -120,7 +120,7 @@ public class bloqueGridBagLayout extends JPanel {
 		panelControles.add(scrollSliders, gbc_scrollSliders);
 		
 		panelSliders = new JPanel();
-		panelSliders.setBackground(new Color(64, 128, 128));
+		panelSliders.setBackground(new Color(255, 255, 255));
 		scrollSliders.setViewportView(panelSliders);
 		panelSliders.setLayout(new BoxLayout(panelSliders, BoxLayout.Y_AXIS));
 		
@@ -134,7 +134,7 @@ public class bloqueGridBagLayout extends JPanel {
 		panelControles.add(scrollDropdowns, gbc_scrollDropdowns);
 		
 		panelDropdowns = new JPanel();
-		panelDropdowns.setBackground(new Color(64, 128, 128));
+		panelDropdowns.setBackground(new Color(255, 255, 255));
 		scrollDropdowns.setViewportView(panelDropdowns);
 		panelDropdowns.setLayout(new BoxLayout(panelDropdowns, BoxLayout.Y_AXIS));
 		
@@ -147,7 +147,7 @@ public class bloqueGridBagLayout extends JPanel {
 		panelControles.add(scrollSensors, gbc_scrollSensors);
 		
 		panelSensors = new JPanel();
-		panelSensors.setBackground(new Color(64, 128, 128));
+		panelSensors.setBackground(new Color(255, 255, 255));
 		scrollSensors.setViewportView(panelSensors);
 		panelSensors.setLayout(new BoxLayout(panelSensors, BoxLayout.Y_AXIS));
 		
@@ -179,25 +179,21 @@ public class bloqueGridBagLayout extends JPanel {
 	
 	public void addSwitch(JPanel control) {
 		panelSwitches.add(Box.createRigidArea(new Dimension(10, 10)));
-		control.setMaximumSize(new Dimension(ancho/4, 50));
 		panelSwitches.add(control);
 	}
 	
 	public void addSlider(JPanel control) {
 		panelSliders.add(Box.createRigidArea(new Dimension(10, 10)));
-		control.setMaximumSize(new Dimension(ancho/2, 50));
 		panelSliders.add(control);
 	}
 	
 	public void addDropdown(JPanel control) {
 		panelDropdowns.add(Box.createRigidArea(new Dimension(10, 10)));
-		control.setMaximumSize(new Dimension(ancho/3, 60));
 		panelDropdowns.add(control);
 	}
 	
 	public void addSensor(JPanel control) {
 		panelSensors.add(Box.createRigidArea(new Dimension(10, 10)));
-		control.setMaximumSize(new Dimension(ancho/3, 50));
 		panelSensors.add(control);
 	}
 	
