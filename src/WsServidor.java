@@ -88,6 +88,7 @@ public class WsServidor extends WebSocketServer {
 
         } else if (message.equalsIgnoreCase("getModel")) {
             conn.send(Main.modelo.toString());
+            System.out.println(Main.modelo.toString());
         }
     }
 
@@ -159,6 +160,10 @@ public class WsServidor extends WebSocketServer {
         } catch (UnsupportedEncodingException e) { e.printStackTrace();
         } catch (IOException e) { e.printStackTrace(); }
         return result;
+    }
+
+    public static void change(String[] values) {
+        socket.broadcast(objToBytes(values));
     }
     
     public static void closeConnection() {
