@@ -139,13 +139,10 @@ public class frameSnapshots extends JFrame {
 		}
 		
 		hFrame=(numSnaps *40)+120;
-		System.out.println(wFrame);
-		System.out.println(hFrame);
 	
 		setBounds(100, 100, wFrame*10, hFrame);
 	
 		listSnapshots = new JList();
-	
 		listSnapshots.setListData(valuesArrayList.toArray());
 		listSnapshots.setFixedCellHeight(40);
 		listSnapshots.setFixedCellWidth(this.getWidth()-40);
@@ -167,6 +164,17 @@ public class frameSnapshots extends JFrame {
 		contentPane.add(seleccionaSnapshot, BorderLayout.NORTH);
 		
 		botonSeleccionar = new JButton("Seleccionar");
+		botonSeleccionar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int id=idValues.get(valuesArrayList.indexOf(listSnapshots.getSelectedValue()));
+				System.out.println("Has seleccionado "+id);
+				Database.loadSnapshot(String.valueOf(id));
+				interfazIndustry_2 interfaz = new interfazIndustry_2(Main.modelo);
+				interfaz.setVisible(true);
+				interfaz.colocarElements(Main.modelo);
+				dispose();
+			}
+		});
 		botonSeleccionar.setAlignmentX(0.5f);
 		contentPane.add(botonSeleccionar, BorderLayout.SOUTH);
 		
