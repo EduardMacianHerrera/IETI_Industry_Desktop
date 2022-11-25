@@ -118,8 +118,6 @@ public class interfazIndustry_2 extends JFrame {
 				}
 			});			
 			
-			
-			
 			JMenuItem prueba = new JMenuItem("* TEST");
 			prueba.addActionListener(new ActionListener() {
 				

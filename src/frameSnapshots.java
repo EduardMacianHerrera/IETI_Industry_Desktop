@@ -20,10 +20,15 @@ import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.SwingConstants;
 import java.awt.Rectangle;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.AbstractListModel;
+import java.awt.event.WindowStateListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class frameSnapshots extends JFrame {
 	private JPanel contentPane;
@@ -32,6 +37,9 @@ public class frameSnapshots extends JFrame {
 	private JLabel seleccionaSnapshot;
 	private JList listSnapshots;
 	private JButton botonSeleccionar;
+	
+	int wFrame;
+	int hFrame;
 
 	/**
 	 * Launch the application.
@@ -100,7 +108,7 @@ public class frameSnapshots extends JFrame {
 				
 			}
 		});
-		setBounds(100, 100, 200, 300);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -109,63 +117,64 @@ public class frameSnapshots extends JFrame {
 		
 		scrollSnapshots = new JScrollPane();
 		panelSnapshots = new JPanel();
+		panelSnapshots.setBackground(new Color(255, 255, 255));
 		panelSnapshots.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		scrollSnapshots.setViewportView(panelSnapshots);
 		panelSnapshots.setLayout(new BoxLayout(panelSnapshots, BoxLayout.Y_AXIS));
 		
+		wFrame=0;
+		
 		ArrayList<String> valuesArrayList = new ArrayList<String>();
 		ArrayList<Integer> idValues = new ArrayList<Integer>();
 		HashMap<Integer, String> snapshotsMap = Database.listSnapshots();
+		int numSnaps=0;
 		for (Map.Entry<Integer, String> snapshots : snapshotsMap.entrySet()) {
 			valuesArrayList.add(snapshots.getValue());
 			idValues.add(snapshots.getKey());
-		}
-		listSnapshots = new JList();
-		
-		listSnapshots.setListData(valuesArrayList.toArray());
-		
-		panelSnapshots.add(listSnapshots);
-		panelSnapshots.add(Box.createRigidArea(new Dimension(20, 20)));
-		
-		botonSeleccionar = new JButton("Seleccionar");
-		botonSeleccionar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int id=idValues.get(valuesArrayList.indexOf(listSnapshots.getSelectedValue()));
-				System.out.println("Has seleccionado "+id);
-				Database.loadSnapshot(String.valueOf(id));
-				interfazIndustry_2 interfaz = new interfazIndustry_2(Main.modelo);
-				interfaz.setVisible(true);
-				interfaz.colocarElements(Main.modelo);
-				dispose();
+			if(snapshots.getValue().length()>wFrame) {
+				wFrame=snapshots.getValue().length();
 			}
-		});
+			numSnaps++;
+		}
 		
-		botonSeleccionar.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panelSnapshots.add(botonSeleccionar);
+		hFrame=(numSnaps *40)+120;
+		System.out.println(wFrame);
+		System.out.println(hFrame);
+	
+		setBounds(100, 100, wFrame*10, hFrame);
+	
+		listSnapshots = new JList();
+	
+		listSnapshots.setListData(valuesArrayList.toArray());
+		listSnapshots.setFixedCellHeight(40);
+		listSnapshots.setFixedCellWidth(this.getWidth()-40);
+	
+		panelSnapshots.add(listSnapshots);
 		contentPane.add(scrollSnapshots, BorderLayout.CENTER);
 
+		addComponentListener(new ComponentAdapter() {
+		public void componentResized(ComponentEvent e) {
+			listSnapshots.setFixedCellWidth(getWidth()-40);
+		}
+		});
+		
+		DefaultListCellRenderer renderer = (DefaultListCellRenderer) listSnapshots.getCellRenderer();
+		renderer.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		seleccionaSnapshot = new JLabel("Selecciona un snapshot");
 		seleccionaSnapshot.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(seleccionaSnapshot, BorderLayout.NORTH);
+		
+		botonSeleccionar = new JButton("Seleccionar");
+		botonSeleccionar.setAlignmentX(0.5f);
+		contentPane.add(botonSeleccionar, BorderLayout.SOUTH);
+		
+		if(valuesArrayList.size()==0) {
+			JOptionPane.showMessageDialog(this, "no se ha encontrado ningun snapshot", "No Snapshot", 0);
+			this.dispose();
+		}
+		
 //		setBotonesSnapshots();
 	}
-	
-//	public void setBotonesSnapshots() {
-//		for(int i=0; i<30;i++) {
-//			JButton botonSnapshot=new JButton("Snapshot "+i);
-//			botonSnapshot.addActionListener(new ActionListener() {
-//				public void actionPerformed(ActionEvent e) {
-//					String snapshotSelected=botonSnapshot.getText();
-//					System.out.println("Seleccionado el "+snapshotSelected);
-//					dispose();
-//				}
-//			});
-//			panelSnapshots.add(botonSnapshot);
-//			panelSnapshots.add(Box.createRigidArea(new Dimension(5, 5)));
-//		}
-//		
-//	}
-	
 }
