@@ -110,6 +110,7 @@ public class WsServidor extends WebSocketServer {
             System.out.println(datos[2]);
             System.out.println(datos[3]);
 			interfazIndustry_2.updateInterfaz(datos);
+            change(datos);
 		}
     }
 

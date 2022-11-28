@@ -107,6 +107,7 @@ public class interfazIndustry_2 extends JFrame {
 						colocarElements(modelo);
 						contentPane.revalidate();
 						contentPane.repaint();
+						
 					}
 				}
 			});			
