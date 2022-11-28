@@ -208,7 +208,7 @@ public class interfazIndustry_2 extends JFrame {
 							}else {
 								sw.setState("off");
 							}
-							String[] values = {"block1", String.valueOf(sw.getId()), "switch", sw.getState()};
+							String[] values = {bloqueInsertar.getName(), String.valueOf(sw.getId()), "switch", sw.getState()};
 							WsServidor.change(values);
 						}
 					};
@@ -230,6 +230,8 @@ public class interfazIndustry_2 extends JFrame {
 				    ChangeListener cListener=new ChangeListener() {
 						public void stateChanged(ChangeEvent e) {
 							sl.setState(sl.getValue());
+							String[] values = {bloqueInsertar.getName(), String.valueOf(sl.getId()), "slider", String.valueOf(sl.getState())};
+							WsServidor.change(values);
 						}
 					};
 			    	sl.addChangeListener(cListener);
@@ -261,6 +263,8 @@ public class interfazIndustry_2 extends JFrame {
 							Option optionSelected=dpd.getoptions().get(indexSelected);
 							String newState= optionSelected.getValue();
 							dpd.setState(newState);
+							String[] values = {bloqueInsertar.getName(), String.valueOf(dpd.getId()), "dropdown", dpd.getState()};
+							WsServidor.change(values);
 						}
 					};
 					dpd.addItemListener(itListener);
