@@ -40,22 +40,27 @@ public class frameSnapshots extends JFrame {
 	
 	int wFrame;
 	int hFrame;
+	
+	ArrayList<String> valuesArrayList;
+	ArrayList<Integer> idValues;
+	HashMap<Integer, String> snapshotsMap;
+	interfazIndustry_2 interfaz;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					frameSnapshots frame = new frameSnapshots();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					frameSnapshots frame = new frameSnapshots();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
@@ -64,48 +69,28 @@ public class frameSnapshots extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.addWindowListener(new WindowListener() {
 			
-			@Override
 			public void windowOpened(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
-			@Override
 			public void windowIconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
-			@Override
 			public void windowDeiconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
-			@Override
 			public void windowDeactivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
-			@Override
 			public void windowClosing(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
-			@Override
 			public void windowClosed(WindowEvent e) {
-				// TODO Auto-generated method stub
-				interfazIndustry_2 interfaz = new interfazIndustry_2(Main.modelo);
+				interfaz = new interfazIndustry_2(Main.modelo);
 				interfaz.setVisible(true);
 				interfaz.colocarElements(Main.modelo);
 			}
 			
-			@Override
 			public void windowActivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		
@@ -125,9 +110,9 @@ public class frameSnapshots extends JFrame {
 		
 		wFrame=0;
 		
-		ArrayList<String> valuesArrayList = new ArrayList<String>();
-		ArrayList<Integer> idValues = new ArrayList<Integer>();
-		HashMap<Integer, String> snapshotsMap = Database.listSnapshots();
+		valuesArrayList = new ArrayList<String>();
+		idValues = new ArrayList<Integer>();
+		snapshotsMap = Database.listSnapshots();
 		int numSnaps=0;
 		for (Map.Entry<Integer, String> snapshots : snapshotsMap.entrySet()) {
 			valuesArrayList.add(snapshots.getValue());
@@ -169,7 +154,7 @@ public class frameSnapshots extends JFrame {
 				int id=idValues.get(valuesArrayList.indexOf(listSnapshots.getSelectedValue()));
 				System.out.println("Has seleccionado "+id);
 				Database.loadSnapshot(String.valueOf(id));
-				interfazIndustry_2 interfaz = new interfazIndustry_2(Main.modelo);
+				interfaz = new interfazIndustry_2(Main.modelo);
 				interfaz.setVisible(true);
 				interfaz.colocarElements(Main.modelo);
 				dispose();
@@ -177,12 +162,16 @@ public class frameSnapshots extends JFrame {
 		});
 		botonSeleccionar.setAlignmentX(0.5f);
 		contentPane.add(botonSeleccionar, BorderLayout.SOUTH);
-		
-		if(valuesArrayList.size()==0) {
-			JOptionPane.showMessageDialog(this, "no se ha encontrado ningun snapshot", "No Snapshot", 0);
-			this.dispose();
-		}
-		
-//		setBotonesSnapshots();
+	}
+	
+	public void mostrarMensajeError() {
+		System.out.println("Error no hay snapshots");
+		JOptionPane.showMessageDialog(this, "no se ha encontrado ningun snapshot", "No Snapshot", 0);
+		setVisible(false);
+		this.dispose();
+	}
+	
+	public int getNumSnapshots() {
+		return valuesArrayList.size();
 	}
 }

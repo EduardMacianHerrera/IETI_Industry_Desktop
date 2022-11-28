@@ -52,13 +52,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime; 
 
 public class interfazIndustry_2 extends JFrame {
-	
-    public static void main(String[] args) { 
-        Modelo modelo = new Modelo();
-        interfazIndustry_2 interfaz = new interfazIndustry_2(modelo);
-        interfaz.setVisible(true);
-    }
-    	
 		private static JFileChooser navegacioFitxers;
 		private static File arxiuDades;
 		private static String nomArxiu;
@@ -118,18 +111,6 @@ public class interfazIndustry_2 extends JFrame {
 				}
 			});			
 			
-			JMenuItem prueba = new JMenuItem("* TEST");
-			prueba.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					System.out.println("TEST");
-					String[] arrays = {"block1","1","slider","2"};
-					updateInterfaz(arrays);
-				}
-			});
-			
-			
 			JMenuItem opcioVisualitzacions = new JMenuItem("Visualitzacions");
 			
 			
@@ -149,39 +130,9 @@ public class interfazIndustry_2 extends JFrame {
 				}
 			});
 			
-			JMenuItem pruebaVaciarElementos=new JMenuItem("* Vaciar Panel de Controles");
-			pruebaVaciarElementos.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					vaciarPanelControles();
-				}
-			});
-			
-			
-			JMenuItem cargarModelo=new JMenuItem("* Cargar Modelo sin abrir xml");
-			cargarModelo.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					vaciarPanelControles();
-					colocarElements(modelo);
-				}
-			});
-			
-			
-			JMenuItem verModelo=new JMenuItem("* Ver modelo en la terminal");
-			verModelo.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					System.out.println("\nNuestro actual modelo es: "+ modelo.toString());
-				}
-			});
-			
-			
 			JMenuItem snapshot=new JMenuItem("SNAPSHOT");
 			snapshot.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//Se vienen cositas transformando la fecha a un formato para guardar en la BBDD
-//					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-//					LocalDateTime now = LocalDateTime.now();  
-//					System.out.println(dtf.format(now));  
-//					System.out.println("Modelo caturado: \n"+modelo.toString());
 					String nombreSnapshot= JOptionPane.showInputDialog("Introduzca un nombre para el Snapshot", 0);
 					System.out.println("El snapshot se guardara como "+nombreSnapshot);
 					Database.saveSnapshot(nombreSnapshot, modelo.toString());
@@ -192,39 +143,29 @@ public class interfazIndustry_2 extends JFrame {
 			JMenuItem carregarSnapshot=new JMenuItem("carregar SNAPSHOT");
 			carregarSnapshot.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-//					System.out.println("Selecciona un snapshot: ");
-//					HashMap<Integer, String> snapshotsMap = Database.listSnapshots();
-//                    for (Map.Entry<Integer, String> snapshot : snapshotsMap.entrySet()) {
-//                        System.out.println("Id: "+snapshot.getKey()+", Name: "+snapshot.getValue());
-//                    }
-//                    Scanner scanner = new Scanner(System.in);
-//                    System.out.println("Escoge:");
+					System.out.println("Selecciona un snapshot: ");
+					HashMap<Integer, String> snapshotsMap = Database.listSnapshots();
+                    for (Map.Entry<Integer, String> snapshot : snapshotsMap.entrySet()) {
+                        System.out.println("Id: "+snapshot.getKey()+", Name: "+snapshot.getValue());
+                    }
+                    Scanner scanner = new Scanner(System.in);
+                    System.out.println("Escoge:");
 					frameSnapshots marcoSnapshots=new frameSnapshots();
 					marcoSnapshots.setVisible(true);
-                    
+					if(marcoSnapshots.getNumSnapshots()==0) {
+						marcoSnapshots.mostrarMensajeError();
+					}
 					dispose();
-//                    vaciarPanelControles();
-//					colocarElements(modelo);
-					
 				}
 			});
 			
 			menuOpciones.add(opcioArxiu);
 			menuOpciones.add(opcioVisualitzacions);
-			//Opciones que aun no es claro que lo quieran asi
-			//Los de snapshot la descripción habla de botones
 			menuOpciones.add(new JSeparator());
 			menuOpciones.add(snapshot);
 			menuOpciones.add(carregarSnapshot);
-			menuOpciones.add(opcioBloquearScroll);
-			//Opciones de prueba del codigo
 			menuOpciones.add(new JSeparator());
-			menuOpciones.add(prueba);
-			menuOpciones.add(pruebaVaciarElementos);
-			menuOpciones.add(cargarModelo);
-			menuOpciones.add(verModelo);
-			
-			
+			menuOpciones.add(opcioBloquearScroll);
 			//Fin de JMenuBar
 			
 			//Creamos el panel de control que tendra una barra de scroll 
@@ -232,7 +173,6 @@ public class interfazIndustry_2 extends JFrame {
 			panelScroll.setBorder(bordeGris1);
 			
 			panelControles = new JPanel();
-//			panelControles.setLayout(new BoxLayout(panelControles, BoxLayout.Y_AXIS));
 			panelScroll.setViewportView(panelControles);
 			contentPane.add(panelScroll, BorderLayout.CENTER);
 		}
@@ -314,12 +254,9 @@ public class interfazIndustry_2 extends JFrame {
 			    	
 			    	ItemListener itListener=new ItemListener() {
 						public void itemStateChanged(ItemEvent e) {
-							//Con el indice sabemos que opcion es la seleccionada, pero no estoy seguro de si estoy estableciendo lo correcto
-//							System.out.println(dpd.getSelectedIndex()); 
-//							System.out.println(dpd.getSelectedItem());
+							//Con el indice sabemos que opcion es la seleccionada
 							int indexSelected=dpd.getSelectedIndex();
 							Option optionSelected=dpd.getoptions().get(indexSelected);
-//							System.out.println("The selected option is "+optionSelected);
 							String newState= optionSelected.getValue();
 							dpd.setState(newState);
 						}
@@ -371,8 +308,6 @@ public class interfazIndustry_2 extends JFrame {
 			panelControles.repaint();
 			panelControles.revalidate();
 		}
-		
-		//[[block1,2,slider,2],[block1,3,dropdown,1]]
 		
 		public static void updateInterfaz(String[] arrays) {
 			String nameBlock = arrays[0];
