@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -265,7 +267,7 @@ public class interfazIndustry_2 extends JFrame {
 							}else {
 								sw.setState("off");
 							}
-							String[] values = {"block1", String.valueOf(sw.getId()), "switch", sw.getState()};
+							String[] values = {bloqueInsertar.getName(), String.valueOf(sw.getId()), "switch", sw.getState()};
 							WsServidor.change(values);
 						}
 					};
@@ -287,12 +289,45 @@ public class interfazIndustry_2 extends JFrame {
 			    	panelControl.setOpaque(false);
 			    	String etiqueta=sl.getLabel();
 			    	
-				    ChangeListener cListener=new ChangeListener() {
-						public void stateChanged(ChangeEvent e) {
+//				    ChangeListener cListener=new ChangeListener() {
+//						public void stateChanged(ChangeEvent e) {
+//							
+//						}
+//					};
+					sl.addMouseListener(new MouseListener() {
+						
+						@Override
+						public void mouseReleased(MouseEvent e) {
 							sl.setState(sl.getValue());
+							String[] values = {bloqueInsertar.getName(), String.valueOf(sl.getId()), "slider", String.valueOf(sl.getState())};
+							WsServidor.change(values);
 						}
-					};
-			    	sl.addChangeListener(cListener);
+						
+						@Override
+						public void mousePressed(MouseEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void mouseExited(MouseEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void mouseEntered(MouseEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+					});
+			    	//sl.addChangeListener(cListener);
 			    	sl.setValue(sl.getState());
 					sl.setMinimum(sl.getMin());
 					sl.setMaximum(sl.getMax());
@@ -321,6 +356,8 @@ public class interfazIndustry_2 extends JFrame {
 							Option optionSelected=dpd.getoptions().get(indexSelected);
 							String newState= optionSelected.getValue();
 							dpd.setState(newState);
+							String[] values = {bloqueInsertar.getName(), String.valueOf(dpd.getId()), "dropdown", dpd.getState()};
+							WsServidor.change(values);
 						}
 					};
 					dpd.addItemListener(itListener);
