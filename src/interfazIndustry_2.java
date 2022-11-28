@@ -208,6 +208,8 @@ public class interfazIndustry_2 extends JFrame {
 							}else {
 								sw.setState("off");
 							}
+							String[] values = {"block1", String.valueOf(sw.getId()), "switch", sw.getState()};
+							WsServidor.change(values);
 						}
 					};
 					sw.addChangeListener(cListener);
