@@ -1,0 +1,63 @@
+<root>
+    <controls name="block1">
+        <switch id="0" default="on">Encendido Maquina 1</switch>
+        <switch id="1" default="off">Encendido Maquina 2</switch>
+        <switch id="2" default="off">Encendido Maquina 3</switch>
+        <slider id="3" default="4" min="0" max="12" step="1">RPM</slider>
+        <slider id="4" default="4" min="3" max="10" step="1">Potencia</slider>
+        <dropdown id="5" default="3" label="Velocidad">
+            <option value="1">Lenta</option>
+            <option value="2">Rapida</option>
+        </dropdown>
+        <dropdown id="6" default="3" label="Maquina">
+            <option value="1">Maquina 1</option>
+            <option value="2">Maquina 2</option>
+            <option value="2">Maquina 3</option>
+        </dropdown>
+        <dropdown id="7" default="3" label="Conectar">
+            <option value="1">Maquina 11</option>
+            <option value="2">Maquina 21</option>
+            <option value="2">Maquina 31</option>
+            <option value="2">Maquina 32</option>
+            <option value="2">Maquina 33</option>
+        </dropdown>
+        <sensor id="8" units="ºC" thresholdlow="5" thresholdhigh="10">Temperatura</sensor>
+    </controls>
+    <controls name="block2">
+        <switch id="9" default="on">Encendido Maquina 11</switch>
+        <switch id="10" default="off">Encendido Maquina 21</switch>
+        <slider id="11" default="4" min="0" max="10" step="1">Calibrador Maquina 11</slider>
+        <slider id="12" default="10" min="10" max="100" step="1">Calibrador Maquina 12</slider>
+        <slider id="13" default="4" min="0" max="10" step="1">Sensibilidad Maquina 11</slider>
+        <slider id="14" default="10" min="10" max="100" step="1">Sensibilidad Maquina 12</slider>
+        <slider id="15" default="4" min="0" max="10" step="1">Conductividad Maquina 11</slider>
+        <slider id="16" default="10" min="10" max="100" step="1">Conductividad Maquina 12</slider>
+        <dropdown id="17" default="3" label="Etiqueta">
+            <option value="2">Modo 1</option>
+            <option value="3">Modo 2</option>
+        </dropdown>
+        <dropdown id="18" default="1" label="Etiqueta">
+            <option value="1">Modo oscuro</option>
+            <option value="2">Modo gris oscuro</option>
+            <option value="3">Modo gris</option>
+            <option value="4">Modo gris claro</option>
+            <option value="5">Modo blanco</option>
+        </dropdown>
+        <sensor id="19" units="ºC" thresholdlow="5" thresholdhigh="10">Temperatura 11</sensor>
+        <sensor id="20" units="ºC" thresholdlow="1" thresholdhigh="100">Temperatura 21</sensor>
+    </controls>
+    <controls name="block3">
+        <switch id="21" default="on">Encendido Maquina 31</switch>
+        <switch id="22" default="off">Encendido Maquina 32</switch>
+        <switch id="23" default="off">Encendido Maquina 33</switch>
+        <slider id="24" default="4" min="0" max="12" step="1">RPM 31</slider>
+        <slider id="25" default="4" min="3" max="10" step="1">Potencia 21</slider>
+        <dropdown id="26" default="3" label="Velocidad">
+            <option value="1">Lenta</option>
+            <option value="2">Intermedia</option>
+            <option value="3">Rapida</option>
+        </dropdown>
+        <sensor id="27" units="ºC" thresholdlow="5" thresholdhigh="10">Temperatura</sensor>
+    </controls>
+
+</root>

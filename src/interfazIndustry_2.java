@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,9 +65,13 @@ public class interfazIndustry_2 extends JFrame {
 		private Border bordeVacio1;
 		private static Modelo modelo;
 		
-		boolean scrollHabilitado=true;
+		private static boolean scrollHabilitado=true;
+		private static int anchoBloque;
+		private static int altoBloque;
 		
 		public interfazIndustry_2(final Modelo modelo) {
+			anchoBloque=400;
+			altoBloque=400;
 			this.modelo = modelo;
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			
@@ -160,6 +166,52 @@ public class interfazIndustry_2 extends JFrame {
 				}
 			});
 			
+			JMenu opcionDimensionesBloque=new JMenu("Dimensiones de los Bloque");
+			
+			JMenuItem aumentarBloques=new JMenuItem("Aumentar Bloques");
+			aumentarBloques.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					interfazIndustry_2 interfaz = new interfazIndustry_2(modelo, anchoBloque+100, altoBloque+100);
+					interfaz.setVisible(true);
+					interfaz.colocarElements(modelo);
+					interfaz.setBounds(100, 100, anchoBloque+(anchoBloque/2), altoBloque+50);
+					dispose();
+				}
+			});
+			JMenuItem reducirBloques=new JMenuItem("Reducir Bloques");
+			reducirBloques.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					interfazIndustry_2 interfaz = new interfazIndustry_2(modelo, anchoBloque-100, altoBloque-100);
+					interfaz.setVisible(true);
+					interfaz.colocarElements(modelo);
+					interfaz.setBounds(100, 100, anchoBloque+(anchoBloque/2), altoBloque+50);
+					dispose();
+				}
+			});
+			JMenuItem especificarDimensiones=new JMenuItem("Especificar Dimensiones");
+			especificarDimensiones.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String contenidoAncho=JOptionPane.showInputDialog("Introduce el ANCHO de los bloques: ");
+					String contenidoAlto=JOptionPane.showInputDialog("Introduce el ALTO de los bloques: ");
+					try {
+						anchoBloque=Integer.parseInt(contenidoAncho);
+						altoBloque=Integer.parseInt(contenidoAlto);
+						interfazIndustry_2 interfaz = new interfazIndustry_2(modelo, anchoBloque-100, altoBloque-100);
+						interfaz.setVisible(true);
+						interfaz.colocarElements(modelo);
+						interfaz.setBounds(100, 100, anchoBloque+(anchoBloque/2), altoBloque+50);
+						dispose();
+					}catch(NumberFormatException e1) {
+						mostrarErrorInt();
+					}
+					
+				}
+			});
+			
+			opcionDimensionesBloque.add(aumentarBloques);
+			opcionDimensionesBloque.add(reducirBloques);
+			opcionDimensionesBloque.add(especificarDimensiones);
+			
 			menuOpciones.add(opcioArxiu);
 			menuOpciones.add(opcioVisualitzacions);
 			menuOpciones.add(new JSeparator());
@@ -167,6 +219,8 @@ public class interfazIndustry_2 extends JFrame {
 			menuOpciones.add(carregarSnapshot);
 			menuOpciones.add(new JSeparator());
 			menuOpciones.add(opcioBloquearScroll);
+			menuOpciones.add(opcionDimensionesBloque);
+			
 			//Fin de JMenuBar
 			
 			//Creamos el panel de control que tendra una barra de scroll 
@@ -181,13 +235,17 @@ public class interfazIndustry_2 extends JFrame {
 			JOptionPane.showMessageDialog(lamina, mensajeError, "Lectura XML incorrecta", 0);
 		}
 		
+		public interfazIndustry_2(final Modelo modelo, int anchoEspecificado, int altoEspecificado) {
+			this(modelo);
+			this.anchoBloque=anchoEspecificado;
+			this.altoBloque=altoEspecificado;
+		}
+		
 		//Metodo para colocar los elementos
 		public static void colocarElements(Modelo modelo) {
-			int anchoEspecificado=400;
-			int altoEspecificado=400;
 			ArrayList<Block> listaBloques = modelo.getBlocks();
 			for(Block bloqueInsertar:listaBloques) {
-				bloqueGridBagLayout panelBloque=new bloqueGridBagLayout();
+				bloqueGridBagLayout panelBloque=new bloqueGridBagLayout(anchoBloque, altoBloque);
 				
 				ArrayList<Switch> switches = bloqueInsertar.getSwitches();
 			    ArrayList<Dropdown> dropdowns = bloqueInsertar.getDropdowns();
@@ -200,6 +258,7 @@ public class interfazIndustry_2 extends JFrame {
 			    for(Switch sw:switches) {
 			    	JPanel panelControl=new JPanel();
 			    	panelControl.setOpaque(false);
+			    	panelControl.setLayout(new BoxLayout(panelControl, BoxLayout.Y_AXIS));
 			    	String etiqueta=sw.getLabel();
 			    	
 			    	ChangeListener cListener=new ChangeListener() {
@@ -217,7 +276,10 @@ public class interfazIndustry_2 extends JFrame {
 					if (sw.getState().equals("on")) {
 						sw.setSelected(true);
 					}
-			    	panelControl.add(new JLabel(etiqueta));
+					JLabel et=new JLabel(etiqueta);
+					et.setAlignmentX(Component.CENTER_ALIGNMENT);
+			    	panelControl.add(et);
+			    	sw.setAlignmentX(Component.CENTER_ALIGNMENT);
 			    	panelControl.add(sw);
 			    	panelBloque.addSwitch(panelControl);
 			    }
@@ -228,14 +290,45 @@ public class interfazIndustry_2 extends JFrame {
 			    	panelControl.setOpaque(false);
 			    	String etiqueta=sl.getLabel();
 			    	
-				    ChangeListener cListener=new ChangeListener() {
-						public void stateChanged(ChangeEvent e) {
+//				    ChangeListener cListener=new ChangeListener() {
+//						public void stateChanged(ChangeEvent e) {
+//							
+//						}
+//					};
+					sl.addMouseListener(new MouseListener() {
+						
+						@Override
+						public void mouseReleased(MouseEvent e) {
 							sl.setState(sl.getValue());
 							String[] values = {bloqueInsertar.getName(), String.valueOf(sl.getId()), "slider", String.valueOf(sl.getState())};
 							WsServidor.change(values);
 						}
-					};
-			    	sl.addChangeListener(cListener);
+						
+						@Override
+						public void mousePressed(MouseEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void mouseExited(MouseEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void mouseEntered(MouseEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+					});
+			    	//sl.addChangeListener(cListener);
 			    	sl.setValue(sl.getState());
 					sl.setMinimum(sl.getMin());
 					sl.setMaximum(sl.getMax());
@@ -365,6 +458,10 @@ public class interfazIndustry_2 extends JFrame {
 					}
 				}
 			}
+		}
+		
+		public void mostrarErrorInt() {
+			JOptionPane.showMessageDialog(this, "debes entrar dos numeros enteros", "Entra Integers", 0);
 		}
 		
 }
