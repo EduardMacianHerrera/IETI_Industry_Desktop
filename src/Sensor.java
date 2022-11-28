@@ -14,6 +14,7 @@ public class Sensor extends JTextField {
         this.thresholdHigh = thresholdHigh;
         this.thresholdLow = thresholdLow;
         this.label = label;
+        this.setText(units);
     }
 
     public int getId() {
