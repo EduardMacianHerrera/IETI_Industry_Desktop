@@ -12,22 +12,12 @@ import com.password4j.Password;
 
 public class Database {
 
-    private static String basePath = System.getProperty("user.dir") + "/";
-    private static String filePath = basePath + "database.db";
-    private static String pathSalt = basePath + "salt.db";
-    private static String pathPepper = basePath + "pepper.db";
+    public static String basePath = System.getProperty("user.dir") + "/";
+    public static String filePath = basePath + "database.db";
+    public static String pathSalt = basePath + "salt.db";
+    public static String pathPepper = basePath + "pepper.db";
 
-    public static void main(String[] args) throws SQLException {
-
-        // Si no hi ha l'arxiu creat, el crea i li posa dades
-    	System.out.println(basePath);
-        File fDatabase = new File(filePath);
-        if (!fDatabase.exists()) {
-            initDatabase();
-        }
-        initDatabase();
-
-    }
+    
 
     static HashMap<String, String> getData() {
         Connection conn = UtilsSQLite.connect(filePath);
@@ -176,13 +166,19 @@ public class Database {
 		LocalDateTime now = LocalDateTime.now();  
     	
     	UtilsSQLite.queryUpdate(conn, "insert into snapshots(name,date,controls) values ('"+name+"','"+dtf.format(now)+"','"+controls+"');");
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     public static HashMap<Integer, String> listSnapshots() {
     	Connection conn = UtilsSQLite.connect(filePath);
     	HashMap<Integer, String> snapshotsMap = new HashMap<Integer, String>();
     	
-    	ResultSet rs = UtilsSQLite.querySelect(conn, "select id,name from snapshots;");
+    	ResultSet rs = UtilsSQLite.querySelect(conn, "select id, (name || ' - ' || date) from snapshots;");
     	try {
 			while (rs.next()) {
 				snapshotsMap.put(rs.getInt(1), rs.getString(2));
@@ -191,7 +187,14 @@ public class Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	return snapshotsMap;
+		
     }
     
     public static boolean loadSnapshot(String id) {
@@ -204,6 +207,12 @@ public class Database {
 			while (rs.next()) {
 				modelo = rs.getString(1);
 			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			conn.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
