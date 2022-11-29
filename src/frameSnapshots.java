@@ -154,10 +154,8 @@ public class frameSnapshots extends JFrame {
 				int id=idValues.get(valuesArrayList.indexOf(listSnapshots.getSelectedValue()));
 				System.out.println("Has seleccionado "+id);
 				Database.loadSnapshot(String.valueOf(id));
-				interfaz = new interfazIndustry_2(Main.modelo);
-				interfaz.setVisible(true);
-				interfaz.colocarElements(Main.modelo);
 				dispose();
+				
 			}
 		});
 		botonSeleccionar.setAlignmentX(0.5f);
